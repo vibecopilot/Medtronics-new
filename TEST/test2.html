@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Medtronic Healthcare Portal{% endblock %}</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f8f9ff 0%, #e8ebf7 100%);
+            min-height: 100vh;
+            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, #140e4a 0%, #1a1560 100%);
+            color: white;
+            padding: 1.5rem 3rem;
+            box-shadow: 0 4px 20px rgba(20, 14, 74, 0.15);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="0.5"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            z-index: 1;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .portal-name {
+            font-size: 2rem;
+            font-weight: 700;
+            background: linear-gradient(45deg, #ffffff, #e1e8ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .login-btn {
+            background: linear-gradient(45deg, #0066cc, #004499);
+            color: white;
+            border: none;
+            padding: 14px 28px;
+            border-radius: 30px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 102, 204, 0.3);
+        }
+
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 102, 204, 0.4);
+            background: linear-gradient(45deg, #0052a3, #003d7a);
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            padding: 4rem 3rem;
+            max-width: 1400px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .content-wrapper {
+            background: white;
+            border-radius: 25px;
+            padding: 4rem 3rem;
+            box-shadow: 0 20px 40px rgba(20, 14, 74, 0.08);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .content-wrapper::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #140e4a, #0066cc, #e91e63, #4caf50, #ff9800);
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 4rem;
+            color: #140e4a;
+            font-size: 3rem;
+            font-weight: 700;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 4px;
+            background: linear-gradient(90deg, #140e4a, #0066cc);
+            border-radius: 2px;
+        }
+
+        .buttons-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .service-button {
+            display: block;
+            text-decoration: none;
+            color: inherit;
+            padding: 2.5rem 2rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 8px 25px rgba(20, 14, 74, 0.08);
+            transform: scale(0.98);
+        }
+
+        .service-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(20, 14, 74, 0.1), transparent);
+            transition: left 0.6s ease;
+        }
+
+        .service-button:hover::before {
+            left: 100%;
+        }
+
+        .service-button:hover {
+            transform: translateY(-10px) scale(1.05);
+            box-shadow: 0 20px 40px rgba(20, 14, 74, 0.15);
+            border-color: #140e4a;
+            background: linear-gradient(135deg, #140e4a 0%, #1a1560 100%);
+            color: white;
+        }
+
+        .service-button:nth-child(1):hover {
+            background: linear-gradient(135deg, #0066cc 0%, #004499 100%);
+        }
+
+        .service-button:nth-child(2):hover {
+            background: linear-gradient(135deg, #e91e63 0%, #c2185b 100%);
+        }
+
+        .service-button:nth-child(3):hover {
+            background: linear-gradient(135deg, #4caf50 0%, #388e3c 100%);
+        }
+
+        .service-button:nth-child(4):hover {
+            background: linear-gradient(135deg, #ff9800 0%, #f57c00 100%);
+        }
+
+        .button-icon {
+            font-size: 3rem;
+            margin-bottom: 1.5rem;
+            color: #140e4a;
+            transition: all 0.3s ease;
+        }
+
+        .service-button:hover .button-icon {
+            color: white;
+            transform: scale(1.2) rotate(5deg);
+        }
+
+        .button-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: #140e4a;
+            transition: color 0.3s ease;
+        }
+
+        .service-button:hover .button-title {
+            color: white;
+        }
+
+        .button-description {
+            font-size: 1rem;
+            color: #666;
+            transition: color 0.3s ease;
+            line-height: 1.5;
+        }
+
+        .service-button:hover .button-description {
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        /* Footer */
+        .footer {
+            background: linear-gradient(135deg, #140e4a 0%, #1a1560 100%);
+            color: white;
+            padding: 3rem 3rem 2rem;
+            margin-top: auto;
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 3rem;
+        }
+
+        .footer-section h3 {
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            color: #e1e8ff;
+        }
+
+        .footer-section ul {
+            list-style: none;
+        }
+
+        .footer-section ul li {
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-section ul li a {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-section ul li a:hover {
+            color: #0066cc;
+        }
+
+        .footer-bottom {
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            text-align: center;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 1200px) {
+            .header {
+                padding: 1.5rem 2rem;
+            }
+
+            .main-content {
+                padding: 3rem 2rem;
+            }
+
+            .content-wrapper {
+                padding: 3rem 2rem;
+            }
+
+            .buttons-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 2rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                padding: 1rem;
+            }
+
+            .header-content {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+
+            .portal-name {
+                font-size: 1.6rem;
+            }
+
+            .login-btn {
+                padding: 12px 24px;
+                font-size: 1rem;
+            }
+
+            .main-content {
+                padding: 2rem 1rem;
+            }
+
+            .content-wrapper {
+                padding: 2rem 1.5rem;
+            }
+
+            .section-title {
+                font-size: 2.2rem;
+                margin-bottom: 3rem;
+            }
+
+            .buttons-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+
+            .service-button {
+                padding: 2rem 1.5rem;
+                transform: scale(1);
+            }
+
+            .service-button:hover {
+                transform: translateY(-5px) scale(1.02);
+            }
+
+            .button-icon {
+                font-size: 2.5rem;
+            }
+
+            .button-title {
+                font-size: 1.2rem;
+            }
+
+            .button-description {
+                font-size: 0.9rem;
+            }
+
+            .footer {
+                padding: 2rem 1rem 1.5rem;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+                text-align: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .portal-name {
+                font-size: 1.4rem;
+            }
+
+            .section-title {
+                font-size: 1.8rem;
+            }
+
+            .service-button {
+                padding: 1.5rem 1rem;
+            }
+
+            .button-icon {
+                font-size: 2.2rem;
+            }
+
+            .button-title {
+                font-size: 1.1rem;
+            }
+
+            .button-description {
+                font-size: 0.85rem;
+            }
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .service-button {
+            animation: fadeInUp 0.6s ease forwards;
+        }
+
+        .service-button:nth-child(1) {
+            animation-delay: 0.1s;
+        }
+
+        .service-button:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .service-button:nth-child(3) {
+            animation-delay: 0.3s;
+        }
+
+        .service-button:nth-child(4) {
+            animation-delay: 0.4s;
+        }
+
+        /* Accessibility */
+        .service-button:focus {
+            outline: 3px solid #0066cc;
+            outline-offset: 2px;
+        }
+
+        .login-btn:focus {
+            outline: 3px solid #ffffff;
+            outline-offset: 2px;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <h1 class="portal-name">Medtronic Healthcare Portal</h1>
+            <button> <a class="login-btn" href="{% url 'login' %}">Login</a></button>
+
+        </div>
+    </header>
+
+    <main class="main-content">
+        {% if messages %}
+        <div class="container mt-3">
+            {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">
+                {{ message }}
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        {% block content %}
+
+        <div class="content-wrapper">
+            <h2 class="section-title">Healthcare Solutions</h2>
+            <div class="buttons-grid">
+                <a href="{% url 'category_list' %}" class="service-button">
+                    <div class="button-icon">📋</div>
+                    <h3 class="button-title">Product Catalogue</h3>
+                    <p class="button-description">Browse our comprehensive range of medical devices and healthcare
+                        solutions tailored for professionals</p>
+                </a>
+
+                <div class="service-button" onclick="handleClick('service-request')">
+                    <div class="button-icon">🔧</div>
+                    <h3 class="button-title">Service Request</h3>
+                    <p class="button-description">Submit service requests for maintenance, repairs, and technical
+                        support with our expert team</p>
+                </div>
+
+                <div class="service-button" onclick="handleClick('demo-request')">
+                    <div class="button-icon">🎯</div>
+                    <h3 class="button-title">Demo Request</h3>
+                    <p class="button-description">Schedule product demonstrations and hands-on training sessions with
+                        our specialists</p>
+                </div>
+
+                <div class="service-button" onclick="handleClick('training-education')">
+                    <div class="button-icon">🎓</div>
+                    <h3 class="button-title">Training and Education</h3>
+                    <p class="button-description">Access educational resources, courses, and certification programs to
+                        enhance your expertise</p>
+                </div>
+            </div>
+        </div>
+        {% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Products & Solutions</h3>
+                <ul>
+                    <li><a href="#">Cardiac & Vascular</a></li>
+                    <li><a href="#">Medical Surgical</a></li>
+                    <li><a href="#">Neuroscience</a></li>
+                    <li><a href="#">Diabetes</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Support & Services</h3>
+                <ul>
+                    <li><a href="#">Technical Support</a></li>
+                    <li><a href="#">Training Programs</a></li>
+                    <li><a href="#">Product Documentation</a></li>
+                    <li><a href="#">Service Centers</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Resources</h3>
+                <ul>
+                    <li><a href="#">Clinical Evidence</a></li>
+                    <li><a href="#">Educational Materials</a></li>
+                    <li><a href="#">Product Manuals</a></li>
+                    <li><a href="#">Webinars & Events</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Contact & Info</h3>
+                <ul>
+                    <li><a href="#">Contact Us</a></li>
+                    <li><a href="#">About Medtronic</a></li>
+                    <li><a href="#">Privacy Policy</a></li>
+                    <li><a href="#">Terms of Use</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 Medtronic. All rights reserved. | Advancing healthcare through innovative medical
+                technologies.</p>
+        </div>
+    </footer>
+
+    <script>
+
+
+        // function handleClick(action) {
+        //     switch (action) {
+        //         case 'product_catalogue':
+        //             // Navigate to the product catalogue page
+        //             window.location.href = '/products/product-catalogue/';
+        //             break;
+        //         // Add other cases for your other buttons
+        //         default:
+        //             console.log('Action not implemented:', action);
+        //     }
+        // }
+
+        // Enhanced interactions for better spacing effect
+        document.addEventListener('DOMContentLoaded', function () {
+            const buttons = document.querySelectorAll('.service-button');
+
+            buttons.forEach(button => {
+                button.addEventListener('mouseenter', function () {
+                    // Scale up the hovered button and slightly scale down others
+                    buttons.forEach(btn => {
+                        if (btn === this) {
+                            btn.style.transform = 'translateY(-10px) scale(1.05)';
+                        } else {
+                            btn.style.transform = 'scale(0.95)';
+                        }
+                    });
+                });
+
+                button.addEventListener('mouseleave', function () {
+                    // Reset all buttons to original state
+                    buttons.forEach(btn => {
+                        btn.style.transform = 'scale(0.98)';
+                    });
+                });
+            });
+        });
+    </script>
+</body>
+
+</html>

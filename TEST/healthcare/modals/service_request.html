@@ -1,0 +1,93 @@
+<!-- Service Request Modal -->
+<div id="serviceRequestModal" class="modal">
+    <div class="modal-body">
+        <span class="close-button" onclick="closeModal('serviceRequestModal')">&times;</span>
+        <h2 class="text-3xl font-bold mb-6 text-[#140e4a]">Product Request Form</h2>
+        <p class="text-gray-600 mb-6">Please fill out the form below and our team will get back to you within 24 hours.</p>
+        
+        <form id="serviceRequestForm" class="space-y-6" method="post" action="{% url 'product_request' %}">
+            {% csrf_token %}
+            
+            <!-- Name Field (Auto-filled if user is logged in) -->
+            <div>
+                <label for="name" class="block text-sm font-semibold mb-2 text-gray-700">Full Name</label>
+                <input type="text" name="name" id="name" 
+                       value="{% if user.is_authenticated %}{{ user.get_full_name }}{% endif %}"
+                       placeholder="Enter your full name" required
+                       class="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent">
+            </div>
+            
+            <!-- Email Field (Auto-filled if user is logged in) -->
+            <div>
+                <label for="email" class="block text-sm font-semibold mb-2 text-gray-700">Email Address</label>
+                <input type="email" name="email" id="email" 
+                       value="{% if user.is_authenticated %}{{ user.email }}{% endif %}"
+                       placeholder="Enter your email address" required
+                       class="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent">
+            </div>
+            
+            <!-- Contact Number -->
+            <div>
+                <label for="contact_number" class="block text-sm font-semibold mb-2 text-gray-700">Contact Number</label>
+                <input type="tel" name="contact_number" id="contact_number" 
+                       placeholder="Enter your 10-digit contact number" required
+                       maxlength="10" pattern="[0-9]{10}"
+                       class="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent">
+            </div>
+            
+            <!-- Category Selection -->
+            <div>
+                <label for="category" class="block text-sm font-semibold mb-2 text-gray-700">Product Category</label>
+                <select name="category" id="category" required onchange="updateProducts(this.value)"
+                    class="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent">
+                    <option value="">Select Category</option>
+                    {% for category in categories %}
+                        <option value="{{ category.id }}">{{ category.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            
+            <!-- Product Selection -->
+            <div>
+                <label for="product" class="block text-sm font-semibold mb-2 text-gray-700">Product</label>
+                <select name="product" id="product" required
+                    class="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent">
+                    <option value="">Select Product</option>
+                    <!-- Products will be populated via JavaScript based on category selection -->
+                </select>
+            </div>
+            
+            <!-- Address -->
+            <div>
+                <label for="address" class="block text-sm font-semibold mb-2 text-gray-700">Full Address</label>
+                <textarea name="address" id="address" rows="4" 
+                          placeholder="Enter your complete address (minimum 10 characters)" required
+                          minlength="10"
+                          class="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent resize-none"></textarea>
+            </div>
+            
+            <!-- Urgency Level -->
+            <div>
+                <label for="urgency" class="block text-sm font-semibold mb-2 text-gray-700">Priority Level</label>
+                <select name="urgency" id="urgency"
+                    class="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent">
+                    <option value="low">Low - General inquiry</option>
+                    <option value="medium" selected>Medium - Within a week</option>
+                    <option value="high">High - Within 48 hours</option>
+                    <option value="urgent">Urgent - Same day response needed</option>
+                </select>
+            </div>
+            
+            <div class="flex justify-end pt-4 gap-3">
+                <button type="button" onclick="closeModal('serviceRequestModal')"
+                    class="bg-gray-500 text-white px-6 py-3 rounded-lg hover:bg-gray-600 transition-colors duration-200">
+                    Cancel
+                </button>
+                <button type="submit"
+                    class="bg-[#0066b3] text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors duration-200">
+                    Submit Request
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

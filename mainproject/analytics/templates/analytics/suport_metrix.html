@@ -1,0 +1,230 @@
+{% extends 'admin.html' %}
+
+{% block style %}
+<style>
+    .support-metrics-card {
+        background: linear-gradient(120deg, #f8fafc 70%, #e0f7fa 100%);
+        border-radius: 24px;
+        box-shadow: 0 10px 38px #140e4a14;
+        padding: 2.5rem 1.6rem 2.5rem 1.6rem;
+        max-width: 950px;
+        margin: 2.5rem auto;
+        border: 1.5px solid #e3e8f1;
+    }
+    .support-metrics-title {
+        font-size: 2rem;
+        font-weight: 900;
+        color: #140e4a;
+        margin-bottom: 2.1rem;
+        letter-spacing: -0.5px;
+        border-bottom: 2.5px solid #0ea5e9;
+        padding-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.7rem;
+    }
+    .support-metrics-title i {
+        font-size: 1.7rem;
+        color: #0ea5e9;
+        margin-right: 0.4rem;
+    }
+    .support-metrics-filter {
+        display: flex;
+        gap: 1.2rem;
+        align-items: flex-end;
+        margin-bottom: 2.3rem;
+        flex-wrap: wrap;
+    }
+    .support-metrics-filter label {
+        font-weight: 700;
+        color: #1740b0;
+        font-size: 1rem;
+    }
+    .support-metrics-filter select {
+        border: 1.5px solid #e1e8ff;
+        border-radius: 9px;
+        font-size: 1rem;
+        padding: 0.7rem 1.1rem;
+        min-width: 120px;
+        background: #f7faff;
+        margin-left: 0.3rem;
+        box-shadow: 0 2px 8px #e3e8f13a;
+        transition: border-color 0.13s;
+    }
+    .support-metrics-filter select:focus {
+        border-color: #0ea5e9;
+        background: #fff;
+        outline: none;
+    }
+    .metrics-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+        gap: 1.6rem;
+        margin-bottom: 2.1rem;
+    }
+    .metrics-item {
+        background: #fff;
+        border-radius: 16px;
+        box-shadow: 0 3px 12px #140e4a12;
+        padding: 2.1rem 1.4rem 1.5rem 1.4rem;
+        text-align: center;
+        border: 1.5px solid #e3e8f1;
+        transition: transform 0.13s, box-shadow 0.17s;
+        position: relative;
+    }
+    .metrics-item:hover {
+        box-shadow: 0 7px 28px #38bdf82b;
+        transform: translateY(-4px) scale(1.025);
+    }
+    .metrics-icon {
+        font-size: 2.3rem;
+        margin-bottom: 0.8rem;
+        display: block;
+        color: #0ea5e9;
+    }
+    .metrics-item.bg-blue .metrics-icon { color: #2563eb; }
+    .metrics-item.bg-green .metrics-icon { color: #22c55e; }
+    .metrics-item.bg-yellow .metrics-icon { color: #eab308; }
+    .metrics-label {
+        font-size: 1.09rem;
+        font-weight: 700;
+        color: #22223b;
+        margin-bottom: 0.7rem;
+    }
+    .metrics-value {
+        font-size: 2.6rem;
+        font-weight: 900;
+        color: #140e4a;
+        letter-spacing: -1px;
+        margin-bottom: 0.3rem;
+    }
+    .common-issues-title {
+        font-size: 1.16rem;
+        font-weight: 800;
+        margin: 2.2rem 0 1.2rem 0;
+        color: #2563eb;
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+    }
+    .common-issues-title i {
+        color: #f59e42;
+        font-size: 1.3rem;
+    }
+    .issues-table {
+        width: 100%;
+        border-radius: 14px;
+        background: #fff;
+        overflow: hidden;
+        border-collapse: separate;
+        border-spacing: 0;
+        box-shadow: 0 2px 12px #140e4a0c;
+        margin-top: 0.3rem;
+        font-size: 1rem;
+    }
+    .issues-table th, .issues-table td {
+        padding: 1rem 1.1rem;
+        text-align: left;
+        vertical-align: middle;
+    }
+    .issues-table th {
+        background: linear-gradient(90deg, #bae6fd 85%, #e0f2fe 100%);
+        color: #0ea5e9;
+        font-weight: 800;
+        font-size: 1.03rem;
+        border-bottom: 2.5px solid #bae6fd;
+    }
+    .issues-table td {
+        color: #2a2936;
+        background: #fff;
+        border-bottom: 1px solid #e0f2fe;
+        transition: background 0.15s;
+    }
+    .issues-table tr:last-child td {
+        border-bottom: none;
+    }
+    .issues-table tr:hover td {
+        background: #f3f8ff;
+    }
+    .no-issues-row {
+        text-align: center;
+        color: #a7b7c7;
+        font-style: italic;
+    }
+    @media (max-width: 850px) {
+        .support-metrics-card { padding: 1rem; }
+        .support-metrics-title { font-size: 1.25rem; }
+        .metrics-item { padding: 1rem; }
+        .metrics-label { font-size: 1rem;}
+        .metrics-value { font-size: 2rem;}
+    }
+    @media (max-width: 600px) {
+        .metrics-grid { grid-template-columns: 1fr; }
+        .support-metrics-card { margin: 1.1rem 0.1rem;}
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="support-metrics-card">
+    <div class="support-metrics-title">
+        <i class="fa-solid fa-headset"></i>
+        Support & Communication Metrics
+    </div>
+    <!-- Filter Dropdown -->
+    <form method="get" class="support-metrics-filter">
+        <label for="period">Filter:</label>
+        <select name="period" id="period" onchange="this.form.submit()">
+            <option value="today" {% if selected_period == 'today' %}selected{% endif %}>Today</option>
+            <option value="month" {% if selected_period == 'month' %}selected{% endif %}>This Month</option>
+            <option value="year" {% if selected_period == 'year' %}selected{% endif %}>This Year</option>
+        </select>
+    </form>
+
+    <div class="metrics-grid">
+        <div class="metrics-item bg-blue">
+            <span class="metrics-icon"><i class="fa-solid fa-ticket"></i></span>
+            <div class="metrics-label">Support Tickets</div>
+            <div class="metrics-value">{{ support_count }}</div>
+        </div>
+        <div class="metrics-item bg-green">
+            <span class="metrics-icon"><i class="fa-solid fa-chalkboard-user"></i></span>
+            <div class="metrics-label">Demo Requests</div>
+            <div class="metrics-value">{{ demo_count }}</div>
+        </div>
+        <div class="metrics-item bg-yellow">
+            <span class="metrics-icon"><i class="fa-solid fa-graduation-cap"></i></span>
+            <div class="metrics-label">Training Requests</div>
+            <div class="metrics-value">{{ training_count }}</div>
+        </div>
+    </div>
+
+    <div class="common-issues-title">
+        <i class="fa-solid fa-triangle-exclamation"></i>
+        Most Common Issues Raised
+    </div>
+    <div class="overflow-x-auto">
+        <table class="issues-table">
+            <thead>
+                <tr>
+                    <th>Issue (Request Name)</th>
+                    <th>Count</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for issue in common_issues %}
+                <tr>
+                    <td>{{ issue.name }}</td>
+                    <td>{{ issue.count }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="2" class="no-issues-row py-6">No issues found for selected period.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+{% endblock %}

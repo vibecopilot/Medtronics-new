@@ -1,0 +1,123 @@
+<!-- Registration Modal -->
+<div id="registeredModal" class="modal">
+    <div class="modal-body">
+        <span class="close-button" onclick="closeModal('registeredModal')">&times;</span>
+        <div class="text-center mb-8">
+            <h2 class="text-3xl font-bold mb-4 text-[#140e4a]">Create Account</h2>
+            <p class="text-gray-600">Join the Medtronic healthcare community</p>
+        </div>
+        
+        <form id="registrationForm" class="space-y-6" method="post" action="{% url 'healthcare:register' %}">
+            {% csrf_token %}
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <label for="reg_first_name" class="block text-sm font-semibold mb-2 text-gray-700">First Name</label>
+                    <input type="text" name="first_name" id="reg_first_name" placeholder="Enter your first name" required
+                        class="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent">
+                </div>
+                <div>
+                    <label for="reg_last_name" class="block text-sm font-semibold mb-2 text-gray-700">Last Name</label>
+                    <input type="text" name="last_name" id="reg_last_name" placeholder="Enter your last name" required
+                        class="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent">
+                </div>
+            </div>
+            
+            <div>
+                <label for="reg_email" class="block text-sm font-semibold mb-2 text-gray-700">Email Address</label>
+                <input type="email" name="email" id="reg_email" placeholder="Enter your email address" required
+                    class="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent">
+            </div>
+            
+            <div>
+                <label for="reg_phone" class="block text-sm font-semibold mb-2 text-gray-700">Phone Number</label>
+                <input type="tel" name="phone" id="reg_phone" placeholder="Enter your phone number"
+                    class="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent">
+            </div>
+            
+            <div>
+                <label for="reg_password" class="block text-sm font-semibold mb-2 text-gray-700">Password</label>
+                <input type="password" name="password1" id="reg_password" placeholder="Create a secure password" required
+                    class="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent">
+                <p class="text-xs text-gray-500 mt-1">Password must be at least 8 characters long</p>
+            </div>
+            
+            <div>
+                <label for="reg_confirm_password" class="block text-sm font-semibold mb-2 text-gray-700">Confirm Password</label>
+                <input type="password" name="password2" id="reg_confirm_password" placeholder="Confirm your password" required
+                    class="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent">
+            </div>
+            
+            <div>
+                <label for="reg_role" class="block text-sm font-semibold mb-2 text-gray-700">Professional Role</label>
+                <select name="professional_role" id="reg_role"
+                    class="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent">
+                    <option value="">Select your role</option>
+                    <option value="physician">Physician</option>
+                    <option value="nurse">Nurse</option>
+                    <option value="technician">Medical Technician</option>
+                    <option value="administrator">Healthcare Administrator</option>
+                    <option value="researcher">Medical Researcher</option>
+                    <option value="student">Medical Student</option>
+                    <option value="pharmacist">Pharmacist</option>
+                    <option value="therapist">Therapist</option>
+                    <option value="other">Other</option>
+                </select>
+            </div>
+            
+            <div>
+                <label for="reg_institution" class="block text-sm font-semibold mb-2 text-gray-700">Institution/Hospital</label>
+                <input type="text" name="institution" id="reg_institution" placeholder="Enter your institution or hospital name"
+                    class="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent">
+            </div>
+            
+            <div>
+                <label for="reg_country" class="block text-sm font-semibold mb-2 text-gray-700">Country</label>
+                <select name="country" id="reg_country"
+                    class="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent">
+                    <option value="">Select your country</option>
+                    <option value="USA">United States of America</option>
+                    <option value="Canada">Canada</option>
+                    <option value="UK">United Kingdom</option>
+                    <option value="Germany">Germany</option>
+                    <option value="Australia">Australia</option>
+                    <option value="India">India</option>
+                    <option value="Japan">Japan</option>
+                    <option value="France">France</option>
+                    <option value="Brazil">Brazil</option>
+                    <option value="Mexico">Mexico</option>
+                    <option value="other">Other</option>
+                </select>
+            </div>
+            
+            <div class="space-y-3">
+                <label class="flex items-start">
+                    <input type="checkbox" name="agree_terms" class="mr-3 mt-1 text-blue-600 focus:ring-blue-400" required>
+                    <span class="text-sm text-gray-600">
+                        I agree to the <a href="{% url 'healthcare:terms' %}" target="_blank" class="text-blue-600 hover:text-blue-800">Terms of Service</a> and 
+                        <a href="{% url 'healthcare:privacy' %}" target="_blank" class="text-blue-600 hover:text-blue-800">Privacy Policy</a>
+                    </span>
+                </label>
+                <label class="flex items-start">
+                    <input type="checkbox" name="receive_updates" class="mr-3 mt-1 text-blue-600 focus:ring-blue-400">
+                    <span class="text-sm text-gray-600">
+                        I would like to receive updates about new products and educational resources
+                    </span>
+                </label>
+            </div>
+            
+            <button type="submit"
+                class="w-full bg-[#140e4a] text-white py-3 rounded-lg hover:bg-indigo-800 transition-colors duration-200 font-semibold">
+                Create Account
+            </button>
+            
+            <div class="text-center pt-4">
+                <p class="text-sm text-gray-600">
+                    Already have an account? 
+                    <a href="#" onclick="closeModal('registeredModal'); openLoginModal();" 
+                       class="text-blue-600 hover:text-blue-800 font-semibold">Sign in</a>
+                </p>
+            </div>
+        </form>
+    </div>
+</div>

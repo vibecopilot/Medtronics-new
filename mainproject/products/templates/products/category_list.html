@@ -1,0 +1,94 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Product Catalogue</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .hover-expand {
+            transition: all 0.5s ease-in-out;
+        }
+        .hover-expand:hover {
+            width: 100% !important;
+            z-index: 10;
+        }
+        .fade-in {
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+        }
+        .group:hover .fade-in {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 font-sans">
+
+<div class="w-full bg-white min-h-screen">
+    <!-- Header Banner -->
+    <div class="bg-gradient-to-br from-blue-100 to-blue-200 text-blue-900 px-8 py-12">
+        <h1 class="text-3xl font-bold leading-snug">INFORMATION FOR HEALTHCARE PROFESSIONALS</h1>
+    </div>
+    
+    <!-- Subheader -->
+    <div class="p-8">
+        <h2 class="text-lg text-blue-900 font-semibold">
+            INNOVATIONS THAT HELP YOU MEET YOUR PATIENTS' NEEDS
+        </h2>
+        <p class="text-lg text-blue-900 font-semibold">Find information about our products below.</p>
+            
+        <a href="{% url 'home' %}"
+           class="inline-flex items-center gap-2 mt-4 px-5 py-2 rounded-full bg-[#140e4a] text-white font-semibold shadow hover:bg-blue-900 focus:outline-none transition-all duration-200">
+            <i class="fas fa-arrow-left"></i>
+            <span>Back to Home Page</span>
+        </a>
+               
+        <!-- Sort & Column Info -->
+        <div class="mt-10 mb-4 text-sm flex flex-wrap items-center justify-between gap-4">
+            <div>
+                <span class="text-gray-500 font-medium">SORT:</span>
+                <span class="text-blue-700 font-semibold">CATEGORY (A-Z)</span>
+                <span class="ml-6 text-gray-500 font-medium">COLUMNS:</span>
+                <span class="text-blue-700 font-semibold">STACK</span>
+            </div>
+            <!-- Search Form -->
+            <form method="get" class="flex gap-2">
+                <input type="text" name="search" placeholder="Search products..."
+                    class="border border-gray-300 p-2 rounded-md text-sm w-64"
+                    value="{{ request.GET.search }}">
+                <button type="submit" class="bg-blue-700 text-white px-4 py-2 rounded-md text-sm hover:bg-blue-800">
+                    Search
+                </button> 
+            </form>
+        </div>
+        
+        <!-- Category & ProductCategory Table Header -->
+        <div class="grid grid-cols-2 text-white font-semibold text-base bg-gradient-to-r from-blue-300 to-blue-500">
+            <div class="p-3">Category</div>
+            <div class="p-3">Products</div>
+        </div>
+        
+        <!-- Table Content -->
+        {% for cat in categories %}
+            <div class="grid grid-cols-2 border-b">
+                <div class="p-4 font-bold text-blue-900 border-r border-gray-200 bg-blue-50">
+                    {{ cat.name }}
+                </div>
+                <div class="p-4 space-y-1 bg-white">
+                    {% for prod_cat in cat.product_categories.all %}
+                        {% if not request.GET.search or request.GET.search|lower in prod_cat.name|lower %}
+                            <a href="{% url 'product_list' prod_cat.pk %}" class="block text-blue-700 hover:underline">
+                                {{ prod_cat.name }}
+                            </a>
+                        {% endif %}
+                    {% empty %}
+                        <span class="text-gray-500 text-sm">No subcategories available.</span>
+                    {% endfor %}
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+
+</body>
+</html>

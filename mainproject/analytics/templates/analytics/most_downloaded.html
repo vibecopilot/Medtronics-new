@@ -1,0 +1,185 @@
+{% extends 'admin.html' %}
+
+{% block style %}
+<style>
+    .analytics-section {
+        background: linear-gradient(120deg, #f8fafc 60%, #e8ebf7 100%);
+        border-radius: 20px;
+        box-shadow: 0 8px 28px #140e4a13;
+        padding: 2.6rem 1.7rem 2.6rem 1.7rem;
+        max-width: 900px;
+        margin: 2.5rem auto;
+        border: 1.5px solid #e3e8f1;
+    }
+    .analytics-header {
+        font-size: 2.1rem;
+        font-weight: 800;
+        color: #140e4a;
+        letter-spacing: -0.5px;
+        border-bottom: 2.5px solid #e3e8f1;
+        padding-bottom: 1.1rem;
+        background: linear-gradient(90deg, #e3e8f1 60%, transparent);
+        border-radius: 14px 14px 0 0;
+        margin-bottom: 2.2rem;
+        display: flex; align-items: center; gap: 1.1rem;
+    }
+    .analytics-header i {
+        color: #a21caf;
+        font-size: 2rem;
+        margin-right: 0.3rem;
+    }
+    .analytics-filter-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1.5rem;
+        align-items: flex-end;
+        margin-bottom: 2.2rem;
+    }
+    .analytics-filter-row label {
+        font-weight: 600;
+        color: #1a1560;
+        font-size: 1.03rem;
+    }
+    .analytics-filter-row select {
+        border: 1.5px solid #e1e8ff;
+        border-radius: 8px;
+        font-size: 1rem;
+        padding: 0.7rem 1.2rem;
+        min-width: 120px;
+        background: #f7faff;
+        margin-left: 0.3rem;
+        transition: border-color 0.14s;
+        box-shadow: 0 2px 8px #e3e8f13a;
+    }
+    .analytics-filter-row select:focus {
+        border-color: #a21caf;
+        outline: none;
+        background: #fff;
+    }
+    .analytics-filter-row button[type="submit"] {
+        background: linear-gradient(90deg, #a21caf 85%, #9333ea 100%);
+        color: #fff;
+        font-weight: 700;
+        padding: 0.73rem 1.7rem;
+        border-radius: 9px;
+        border: none;
+        font-size: 1.05rem;
+        box-shadow: 0 3px 12px #a21caf18;
+        transition: background 0.18s, box-shadow 0.18s;
+        margin-top: 0.1rem;
+    }
+    .analytics-filter-row button[type="submit"]:hover {
+        background: linear-gradient(90deg, #9333ea 65%, #a21caf 100%);
+        box-shadow: 0 4px 24px #a21caf26;
+    }
+
+    .classic-table {
+        width: 100%;
+        border-radius: 13px;
+        background: #fff;
+        overflow: hidden;
+        border-collapse: separate;
+        border-spacing: 0;
+        box-shadow: 0 2px 14px #140e4a0d;
+        margin-top: 1rem;
+        font-size: 1rem;
+    }
+    .classic-table th, .classic-table td {
+        padding: 1rem 1.2rem;
+        text-align: left;
+        vertical-align: middle;
+    }
+    .classic-table th {
+        background: linear-gradient(90deg, #f3e8ff 90%, #ede9fe 100%);
+        color: #a21caf;
+        font-weight: 700;
+        font-size: 1.04rem;
+        border-bottom: 2.5px solid #a21caf;
+    }
+    .classic-table td {
+        color: #32395a;
+        background: #fff;
+        border-bottom: 1px solid #ede9fe;
+        transition: background 0.16s;
+    }
+    .classic-table tr:last-child td {
+        border-bottom: none;
+    }
+    .classic-table tr:hover td {
+        background: #f7e6ff;
+    }
+    .no-data-row {
+        text-align: center;
+        color: #a0aec0;
+        font-style: italic;
+    }
+    @media (max-width: 800px) {
+        .analytics-section { padding: 1rem; }
+        .analytics-header { font-size: 1.3rem; }
+        .classic-table th, .classic-table td { padding: 0.7rem 0.7rem; }
+    }
+    @media (max-width: 600px) {
+        .analytics-filter-row { flex-direction: column; gap: 1.2rem;}
+        .analytics-header { font-size: 1.13rem;}
+        .analytics-section { margin: 1rem 0.2rem; }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="analytics-section">
+    <div class="analytics-header">
+        <i class="fa-solid fa-download"></i>
+        Most Downloaded Product Brochures
+    </div>
+
+    <form method="get" class="analytics-filter-row">
+        <div>
+            <label for="year">Year:</label>
+            <select name="year" id="year">
+                <option value="">All</option>
+                {% for y in years %}
+                    <option value="{{ y }}" {% if y|stringformat:"s" == selected_year %}selected{% endif %}>{{ y }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div>
+            <label for="month">Month:</label>
+            <select name="month" id="month">
+                <option value="">All</option>
+                {% for m in months %}
+                    <option value="{{ m.value }}" {% if m.value|stringformat:"s" == selected_month %}selected{% endif %}>{{ m.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <button type="submit">
+            <i class="fa-solid fa-filter mr-1"></i> Apply
+        </button>
+    </form>
+
+    <div class="overflow-x-auto">
+        <table class="classic-table">
+            <thead>
+                <tr>
+                    <th><i class="fa-solid fa-cube text-purple-700 mr-1"></i> Product</th>
+                    <th><i class="fa-solid fa-download text-purple-700 mr-1"></i> Downloads</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in downloads %}
+                <tr>
+                    <td>{{ item.product__name }}</td>
+                    <td>{{ item.downloads }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="2" class="no-data-row py-6">No data for selected filter</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+<!-- Font Awesome CDN for icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+{% endblock %}

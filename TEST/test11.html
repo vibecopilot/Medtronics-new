@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Medtronic Healthcare Solutions</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <style>
+    :root {
+      --medtronic-primary: #140e4a;
+      --medtronic-blue: #0066cc;
+      --medtronic-light-blue: #e6f3ff;
+      --medtronic-dark-blue: #003d7a;
+      --medtronic-grey: #6b7280;
+      --medtronic-light-grey: #f8fafc;
+    }
+
+    .medtronic-gradient {
+      background: linear-gradient(135deg, var(--medtronic-primary) 0%, var(--medtronic-dark-blue) 100%);
+    }
+
+    .card-professional {
+      background: white;
+      border: 1px solid #e5e7eb;
+      transition: all 0.3s ease;
+    }
+
+    .card-professional:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 24px rgba(20, 14, 74, 0.08);
+      border-color: var(--medtronic-blue);
+    }
+
+    .icon-container {
+      background: linear-gradient(135deg, var(--medtronic-blue), var(--medtronic-primary));
+      transition: all 0.3s ease;
+    }
+
+    .card-professional:hover .icon-container {
+      transform: scale(1.05);
+    }
+
+    .text-medtronic-primary {
+      color: var(--medtronic-primary);
+    }
+
+    .text-medtronic-blue {
+      color: var(--medtronic-blue);
+    }
+
+    .bg-medtronic-primary {
+      background-color: var(--medtronic-primary);
+    }
+
+    .bg-medtronic-blue {
+      background-color: var(--medtronic-blue);
+    }
+
+    .bg-medtronic-light {
+      background-color: var(--medtronic-light-blue);
+    }
+
+    .border-medtronic-blue {
+      border-color: var(--medtronic-blue);
+    }
+
+    .subtle-animation {
+      animation: subtleFloat 6s ease-in-out infinite;
+    }
+
+    @keyframes subtleFloat {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-3px); }
+    }
+
+    .professional-hover:hover {
+      background-color: var(--medtronic-light-blue);
+      color: var(--medtronic-primary);
+    }
+
+    .stats-card {
+      background: linear-gradient(145deg, #ffffff 0%, #f8fafc 100%);
+      border: 1px solid #e5e7eb;
+    }
+
+    .hero-overlay {
+      background: linear-gradient(135deg, 
+        rgba(20, 14, 74, 0.95) 0%, 
+        rgba(0, 61, 122, 0.9) 50%, 
+        rgba(0, 102, 204, 0.85) 100%);
+    }
+
+    .professional-text {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .cta-button {
+      background: linear-gradient(135deg, var(--medtronic-blue), var(--medtronic-primary));
+      transition: all 0.3s ease;
+    }
+
+    .cta-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 16px rgba(0, 102, 204, 0.3);
+    }
+
+    .section-divider {
+      background: linear-gradient(90deg, 
+        transparent 0%, 
+        var(--medtronic-blue) 50%, 
+        transparent 100%);
+      height: 1px;
+      width: 100px;
+      margin: 0 auto;
+    }
+  </style>
+</head>
+
+<body class="bg-gray-50 min-h-screen professional-text">
+  <!-- HEADER -->
+  <header class="bg-white shadow-sm border-b border-gray-200">
+    <div class="max-w-7xl mx-auto px-6 py-4">
+      <div class="flex justify-between items-center">
+        <div class="flex items-center space-x-4">
+          <div class="w-12 h-12 bg-medtronic-primary rounded-lg flex items-center justify-center">
+            <i class="fas fa-heartbeat text-white text-xl"></i>
+          </div>
+          <div>
+            <h1 class="text-2xl font-bold text-medtronic-primary">Medtronic</h1>
+            <p class="text-xs text-gray-500 font-medium">Healthcare Technology</p>
+          </div>
+        </div>
+        <nav class="hidden md:flex items-center space-x-8">
+          <a href="#" class="text-gray-700 hover:text-medtronic-blue font-medium transition-colors professional-hover px-3 py-2 rounded">Healthcare Professionals</a>
+          <a href="#" class="text-gray-700 hover:text-medtronic-blue font-medium transition-colors professional-hover px-3 py-2 rounded">Patients & Caregivers</a>
+          <a href="#" class="text-gray-700 hover:text-medtronic-blue font-medium transition-colors professional-hover px-3 py-2 rounded">Our Company</a>
+          <a href="#" class="text-gray-700 hover:text-medtronic-blue font-medium transition-colors professional-hover px-3 py-2 rounded">Our Impact</a>
+          <button class="bg-medtronic-blue text-white px-6 py-2 rounded-md hover:bg-medtronic-primary transition-colors font-medium">
+            <i class="fas fa-search mr-2"></i>Search
+          </button>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <!-- HERO SECTION -->
+  <section class="medtronic-gradient py-20 relative">
+    <div class="hero-overlay absolute inset-0"></div>
+    <div class="max-w-7xl mx-auto px-6 relative z-10">
+      <div class="text-center text-white">
+        <div class="subtle-animation mb-8">
+          <div class="w-16 h-16 bg-white bg-opacity-10 rounded-full flex items-center justify-center mx-auto mb-6 backdrop-blur-sm">
+            <i class="fas fa-stethoscope text-2xl"></i>
+          </div>
+        </div>
+        <h1 class="text-4xl md:text-5xl font-bold mb-6 leading-tight">
+          Engineering the Extraordinary
+        </h1>
+        <div class="section-divider mb-6"></div>
+        <p class="text-lg md:text-xl mb-8 text-gray-100 max-w-3xl mx-auto font-light">
+          Partnering with healthcare professionals to deliver innovative medical technologies that transform patient care and improve outcomes worldwide
+        </p>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+          <button class="cta-button text-white px-8 py-3 rounded-md font-semibold">
+            <i class="fas fa-arrow-right mr-2"></i>Explore Solutions
+          </button>
+          <button class="border-2 border-white text-white px-8 py-3 rounded-md font-semibold hover:bg-white hover:text-medtronic-primary transition-colors">
+            Learn More
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MAIN DASHBOARD -->
+  <main class="max-w-7xl mx-auto px-6 -mt-12 relative z-20">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-20">
+
+      <!-- Card 1: Products Catalogue -->
+      <div class="card-professional rounded-xl p-6 cursor-pointer group">
+        <div class="icon-container w-12 h-12 rounded-lg flex items-center justify-center mb-6">
+          <i class="fas fa-cubes text-white text-lg"></i>
+        </div>
+        <h3 class="text-xs text-gray-500 font-bold uppercase tracking-wider mb-2">Products & Solutions</h3>
+        <h2 class="text-xl font-bold text-gray-900 mb-3 group-hover:text-medtronic-blue transition-colors">
+          Product Catalogue
+        </h2>
+        <p class="text-gray-600 mb-6 text-sm leading-relaxed">
+          Comprehensive portfolio of medical devices and technologies designed to address diverse healthcare challenges.
+        </p>
+        <div class="flex items-center text-medtronic-blue font-semibold text-sm group-hover:translate-x-1 transition-transform">
+          <span>Browse Products</span>
+          <i class="fas fa-arrow-right ml-2 text-xs"></i>
+        </div>
+      </div>
+
+      <!-- Card 2: Services Request -->
+      <div class="card-professional rounded-xl p-6 cursor-pointer group">
+        <div class="icon-container w-12 h-12 rounded-lg flex items-center justify-center mb-6" style="background: linear-gradient(135deg, #059669, #065f46);">
+          <i class="fas fa-cog text-white text-lg"></i>
+        </div>
+        <h3 class="text-xs text-gray-500 font-bold uppercase tracking-wider mb-2">Support Services</h3>
+        <h2 class="text-xl font-bold text-gray-900 mb-3 group-hover:text-green-600 transition-colors">
+          Service Request
+        </h2>
+        <p class="text-gray-600 mb-6 text-sm leading-relaxed">
+          Access specialized technical support, maintenance services, and clinical assistance tailored to your needs.
+        </p>
+        <div class="flex items-center text-green-600 font-semibold text-sm group-hover:translate-x-1 transition-transform">
+          <span>Request Service</span>
+          <i class="fas fa-arrow-right ml-2 text-xs"></i>
+        </div>
+      </div>
+
+      <!-- Card 3: Training & Education -->
+      <div class="card-professional rounded-xl p-6 cursor-pointer group">
+        <div class="icon-container w-12 h-12 rounded-lg flex items-center justify-center mb-6" style="background: linear-gradient(135deg, #7c3aed, #5b21b6);">
+          <i class="fas fa-graduation-cap text-white text-lg"></i>
+        </div>
+        <h3 class="text-xs text-gray-500 font-bold uppercase tracking-wider mb-2">Education & Training</h3>
+        <h2 class="text-xl font-bold text-gray-900 mb-3 group-hover:text-purple-600 transition-colors">
+          Clinical Education
+        </h2>
+        <p class="text-gray-600 mb-6 text-sm leading-relaxed">
+          Evidence-based educational programs and training resources to enhance clinical expertise and patient outcomes.
+        </p>
+        <div class="flex items-center text-purple-600 font-semibold text-sm group-hover:translate-x-1 transition-transform">
+          <span>Start Learning</span>
+          <i class="fas fa-arrow-right ml-2 text-xs"></i>
+        </div>
+      </div>
+
+      <!-- Card 4: Demo Request -->
+      <div class="card-professional rounded-xl p-6 cursor-pointer group">
+        <div class="icon-container w-12 h-12 rounded-lg flex items-center justify-center mb-6" style="background: linear-gradient(135deg, #ea580c, #c2410c);">
+          <i class="fas fa-desktop text-white text-lg"></i>
+        </div>
+        <h3 class="text-xs text-gray-500 font-bold uppercase tracking-wider mb-2">Product Demo</h3>
+        <h2 class="text-xl font-bold text-gray-900 mb-3 group-hover:text-orange-600 transition-colors">
+          Schedule Demo
+        </h2>
+        <p class="text-gray-600 mb-6 text-sm leading-relaxed">
+          Experience hands-on product demonstrations with our clinical specialists to understand implementation benefits.
+        </p>
+        <div class="flex items-center text-orange-600 font-semibold text-sm group-hover:translate-x-1 transition-transform">
+          <span>Book Demo</span>
+          <i class="fas fa-arrow-right ml-2 text-xs"></i>
+        </div>
+      </div>
+    </div>
+
+    <!-- STATS SECTION -->
+    <div class="stats-card rounded-2xl p-12 mb-20">
+      <div class="text-center mb-12">
+        <h2 class="text-3xl font-bold text-medtronic-primary mb-4">Global Healthcare Impact</h2>
+        <div class="section-divider mb-4"></div>
+        <p class="text-gray-600 text-lg font-light">Transforming lives through innovative medical technology</p>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+        <div class="text-center">
+          <div class="text-3xl font-bold text-medtronic-blue mb-2">150+</div>
+          <div class="text-gray-600 font-medium">Countries Served</div>
+        </div>
+        <div class="text-center">
+          <div class="text-3xl font-bold text-green-600 mb-2">73M+</div>
+          <div class="text-gray-600 font-medium">Patients Helped</div>
+        </div>
+        <div class="text-center">
+          <div class="text-3xl font-bold text-purple-600 mb-2">12,000+</div>
+          <div class="text-gray-600 font-medium">Healthcare Partners</div>
+        </div>
+        <div class="text-center">
+          <div class="text-3xl font-bold text-orange-600 mb-2">95%</div>
+          <div class="text-gray-600 font-medium">Satisfaction Rate</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ADDITIONAL PROFESSIONAL SECTION -->
+    <div class="bg-medtronic-light rounded-2xl p-12 mb-20">
+      <div class="max-w-4xl mx-auto text-center">
+        <h2 class="text-3xl font-bold text-medtronic-primary mb-6">Mission-Driven Innovation</h2>
+        <p class="text-lg text-gray-700 mb-8 font-light leading-relaxed">
+          At Medtronic, we're committed to alleviating pain, restoring health, and extending life. Our comprehensive portfolio of medical technologies spans cardiac and vascular, minimally invasive therapies, restorative therapies, and diabetes management.
+        </p>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div class="text-center">
+            <div class="w-16 h-16 bg-medtronic-blue rounded-full flex items-center justify-center mx-auto mb-4">
+              <i class="fas fa-heart text-white text-xl"></i>
+            </div>
+            <h3 class="font-bold text-medtronic-primary mb-2">Cardiac & Vascular</h3>
+            <p class="text-gray-600 text-sm">Advanced solutions for cardiovascular care</p>
+          </div>
+          <div class="text-center">
+            <div class="w-16 h-16 bg-medtronic-blue rounded-full flex items-center justify-center mx-auto mb-4">
+              <i class="fas fa-brain text-white text-xl"></i>
+            </div>
+            <h3 class="font-bold text-medtronic-primary mb-2">Restorative Therapies</h3>
+            <p class="text-gray-600 text-sm">Neurological and spinal treatment solutions</p>
+          </div>
+          <div class="text-center">
+            <div class="w-16 h-16 bg-medtronic-blue rounded-full flex items-center justify-center mx-auto mb-4">
+              <i class="fas fa-tint text-white text-xl"></i>
+            </div>
+            <h3 class="font-bold text-medtronic-primary mb-2">Diabetes Management</h3>
+            <p class="text-gray-600 text-sm">Comprehensive diabetes care technologies</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="bg-gray-900 text-white">
+    <div class="max-w-7xl mx-auto px-6 py-16">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-12">
+        <div>
+          <h4 class="font-bold text-lg mb-6 text-blue-400">PATIENTS AND CAREGIVERS</h4>
+          <ul class="space-y-3">
+            <li><a href="#" class="text-gray-300 hover:text-white transition-colors text-sm">Overview</a></li>
+            <li><a href="#" class="text-gray-300 hover:text-white transition-colors text-sm">Conditions</a></li>
+            <li><a href="#" class="text-gray-300 hover:text-white transition-colors text-sm">Treatments & Therapies</a></li>
+            <li><a href="#" class="text-gray-300 hover:text-white transition-colors text-sm">Response Care</a></li>
+            <li><a href="#" class="text-gray-300 hover:text-white transition-colors text-sm">Patient Support</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="font-bold text-lg mb-6 text-green-400">HEALTHCARE PROFESSIONALS</h4>
+          <ul class="space-y-3">
+            <li><a href="#" class="text-gray-300 hover:text-white transition-colors text-sm">Clinical Overview</a></li>
+            <li><a href="#" class="text-gray-300 hover:text-white transition-colors text-sm">Therapies & Procedures</a></li>
+            <li><a href="#" class="text-gray-300 hover:text-white transition-colors text-sm">Product Portfolio</a></li>
+            <li><a href="#" class="text-gray-300 hover:text-white transition-colors text-sm">Clinical Evidence</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="font-bold text-lg mb-6 text-purple-400">OUR COMPANY</h4>
+          <ul class="space-y-3">
+            <li><a href="#" class="text-gray-300 hover:text-white transition-colors text-sm">About Medtronic</a></li>
+            <li><a href="#" class="text-gray-300 hover:text-white transition-colors text-sm">Our Mission</a></li>
+            <li><a href="#" class="text-gray-300 hover:text-white transition-colors text-sm">Leadership Team</a></li>
+            <li><a href="#" class="text-gray-300 hover:text-white transition-colors text-sm">Global Presence</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="font-bold text-lg mb-6 text-orange-400">OUR IMPACT</h4>
+          <ul class="space-y-3">
+            <li><a href="#" class="text-gray-300 hover:text-white transition-colors text-sm">Impact Reporting</a></li>
+            <li><a href="#" class="text-gray-300 hover:text-white transition-colors text-sm">Health Equity</a></li>
+            <li><a href="#" class="text-gray-300 hover:text-white transition-colors text-sm">Sustainability</a></li>
+            <li><a href="#" class="text-gray-300 hover:text-white transition-colors text-sm">Community Outreach</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="border-t border-gray-700 pt-8">
+        <div class="flex flex-col md:flex-row justify-between items-center">
+          <div class="flex items-center space-x-4 mb-4 md:mb-0">
+            <div class="w-10 h-10 bg-medtronic-primary rounded-lg flex items-center justify-center">
+              <i class="fas fa-heartbeat text-white"></i>
+            </div>
+            <div>
+              <span class="text-lg font-bold text-white">Medtronic</span>
+              <p class="text-xs text-gray-400">Healthcare Technology</p>
+            </div>
+          </div>
+          <div class="text-center text-gray-400 text-sm">
+            &copy; 2025 Medtronic. All rights reserved. | Engineering the extraordinary.
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+</body>
+
+</html>

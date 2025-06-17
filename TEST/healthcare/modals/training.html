@@ -1,0 +1,130 @@
+<!-- Training & Education Modal -->
+<div id="trainingModal" class="modal">
+    <div class="modal-body">
+        <span class="close-button" onclick="closeModal('trainingModal')">&times;</span>
+        <h2 class="text-3xl font-bold mb-6 text-[#bb1aa0]">Training & Education Registration</h2>
+        <p class="text-gray-600 mb-6">Register for our comprehensive training programs and educational resources.</p>
+        
+        <form id="trainingForm" class="space-y-6" method="post" action="{% url 'training_request' %}">
+            {% csrf_token %}
+            
+            <!-- Name Field (Auto-filled if user is logged in) -->
+            <div>
+                <label for="training_name" class="block text-sm font-semibold mb-2 text-gray-700">Full Name</label>
+                <input type="text" name="name" id="training_name" 
+                       value="{% if user.is_authenticated %}{{ user.get_full_name }}{% endif %}"
+                       placeholder="Enter your full name" required
+                       class="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-pink-400 focus:border-transparent">
+            </div>
+            
+            <!-- Email Field (Auto-filled if user is logged in) -->
+            <div>
+                <label for="training_email" class="block text-sm font-semibold mb-2 text-gray-700">Email Address</label>
+                <input type="email" name="email" id="training_email" 
+                       value="{% if user.is_authenticated %}{{ user.email }}{% endif %}"
+                       placeholder="Enter your email address" required
+                       class="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-pink-400 focus:border-transparent">
+            </div>
+            
+            <!-- Contact Number -->
+            <div>
+                <label for="training_contact" class="block text-sm font-semibold mb-2 text-gray-700">Contact Number</label>
+                <input type="tel" name="contact_number" id="training_contact" 
+                       placeholder="Enter your 10-digit contact number" required
+                       maxlength="10" pattern="[0-9]{10}"
+                       class="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-pink-400 focus:border-transparent">
+            </div>
+            
+            <!-- Category Selection -->
+            <div>
+                <label for="training_category" class="block text-sm font-semibold mb-2 text-gray-700">Training Category</label>
+                <select name="category" id="training_category" required onchange="updateTrainingProducts(this.value)"
+                    class="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-pink-400 focus:border-transparent">
+                    <option value="">Select Training Category</option>
+                    {% for category in categories %}
+                        <option value="{{ category.id }}">{{ category.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            
+            <!-- Product Selection -->
+            <div>
+                <label for="training_product" class="block text-sm font-semibold mb-2 text-gray-700">Product/Technology</label>
+                <select name="product" id="training_product" required
+                    class="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-pink-400 focus:border-transparent">
+                    <option value="">Select Product for Training</option>
+                    <!-- Products will be populated via JavaScript -->
+                </select>
+            </div>
+            
+            <!-- Address -->
+            <div>
+                <label for="training_address" class="block text-sm font-semibold mb-2 text-gray-700">Organization/Institution Address</label>
+                <textarea name="address" id="training_address" rows="4" 
+                          placeholder="Enter your organization's complete address (minimum 10 characters)" required
+                          minlength="10"
+                          class="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-pink-400 focus:border-transparent resize-none"></textarea>
+            </div>
+            
+            <!-- Professional Role (Additional field for training) -->
+            <div>
+                <label for="professional_role" class="block text-sm font-semibold mb-2 text-gray-700">Professional Role</label>
+                <select name="professional_role" id="professional_role"
+                    class="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-pink-400 focus:border-transparent">
+                    <option value="">Select your role</option>
+                    <option value="physician">Physician</option>
+                    <option value="nurse">Nurse</option>
+                    <option value="technician">Medical Technician</option>
+                    <option value="administrator">Healthcare Administrator</option>
+                    <option value="researcher">Medical Researcher</option>
+                    <option value="student">Medical Student</option>
+                    <option value="other">Other</option>
+                </select>
+            </div>
+            
+            <!-- Training Type -->
+            <div>
+                <label for="training_type" class="block text-sm font-semibold mb-2 text-gray-700">Preferred Training Format</label>
+                <div class="space-y-2">
+                    <label class="flex items-center">
+                        <input type="radio" name="training_type" value="online" class="mr-2 text-pink-600 focus:ring-pink-400">
+                        <span class="text-sm">Online/Virtual Training</span>
+                    </label>
+                    <label class="flex items-center">
+                        <input type="radio" name="training_type" value="onsite" class="mr-2 text-pink-600 focus:ring-pink-400">
+                        <span class="text-sm">On-site at our facility</span>
+                    </label>
+                    <label class="flex items-center">
+                        <input type="radio" name="training_type" value="your_location" class="mr-2 text-pink-600 focus:ring-pink-400">
+                        <span class="text-sm">At your location</span>
+                    </label>
+                </div>
+            </div>
+            
+            <!-- Experience Level -->
+            <div>
+                <label for="experience_level" class="block text-sm font-semibold mb-2 text-gray-700">Experience Level</label>
+                <select name="experience_level" id="experience_level"
+                    class="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-pink-400 focus:border-transparent">
+                    <option value="">Select experience level</option>
+                    <option value="0-2">0-2 years</option>
+                    <option value="3-5">3-5 years</option>
+                    <option value="6-10">6-10 years</option>
+                    <option value="11-15">11-15 years</option>
+                    <option value="15+">15+ years</option>
+                </select>
+            </div>
+            
+            <div class="flex justify-end pt-4 gap-3">
+                <button type="button" onclick="closeModal('trainingModal')"
+                    class="bg-gray-500 text-white px-6 py-3 rounded-lg hover:bg-gray-600 transition-colors duration-200">
+                    Cancel
+                </button>
+                <button type="submit"
+                    class="bg-[#bb1aa0] text-white px-6 py-3 rounded-lg hover:bg-pink-700 transition-colors duration-200">
+                    Register for Training
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

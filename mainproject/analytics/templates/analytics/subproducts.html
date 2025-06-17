@@ -1,0 +1,271 @@
+{% extends 'admin.html' %}
+
+{% block style %}
+<style>
+    .subproduct-admin-main {
+        background: linear-gradient(130deg, #f8fafc 0%, #e8ebf7 100%);
+        border-radius: 24px;
+        box-shadow: 0 8px 32px #140e4a12;
+        padding: 0;
+        max-width: 1080px;
+        margin: 3rem auto 2rem auto;
+        border: 1.5px solid #e3e8f1;
+        overflow: hidden;
+    }
+    .subproduct-admin-header {
+        background: linear-gradient(90deg, #a21caf 70%, #818cf8 100%);
+        padding: 2.1rem 2rem 1.1rem 2rem;
+        color: #fff;
+        display: flex;
+        align-items: center;
+        gap: 1.2rem;
+        border-radius: 24px 24px 0 0;
+    }
+    .subproduct-admin-header i {
+        font-size: 2.1rem;
+        color: #fff176;
+        opacity: 0.95;
+        margin-right: 0.7rem;
+    }
+    .subproduct-admin-header h2 {
+        font-size: 2.08rem;
+        font-weight: 800;
+        margin: 0;
+        letter-spacing: -0.5px;
+        line-height: 1.13;
+    }
+    .subproduct-toolbar {
+        background: #f4f1fa;
+        padding: 1.2rem 2rem;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 2.2rem;
+        align-items: flex-end;
+        border-bottom: 1px solid #e3e8f1;
+        border-top: 1px solid #e3e8f1;
+    }
+    .subproduct-toolbar label {
+        font-weight: 600; color: #6d28d9; margin-bottom: .33rem; font-size: 1rem;
+    }
+    .subproduct-toolbar select {
+        border: 1.5px solid #c7d6ea;
+        border-radius: 9px;
+        font-size: 1rem;
+        padding: 0.76rem 1.1rem;
+        background: #fff;
+        min-width: 190px;
+        box-shadow: 0 2px 8px #e3e8f13a;
+        margin-top: .08rem;
+        transition: border-color 0.17s;
+    }
+    .subproduct-toolbar select:focus {
+        outline: none;
+        border-color: #a21caf;
+        box-shadow: 0 2px 8px #a21caf2a;
+    }
+
+    .subproduct-form-errors {
+        background: #fde4e4;
+        color: #c0392b;
+        border-left: 5px solid #e74c3c;
+        padding: 1rem 1.2rem;
+        border-radius: 10px;
+        margin: 2rem 2rem 0 2rem;
+        font-size: 1.01rem;
+        box-shadow: 0 1px 6px #e74c3c0d;
+    }
+
+    .subproduct-add-card {
+        background: #fff;
+        border-radius: 18px;
+        box-shadow: 0 1px 8px #140e4a0c;
+        padding: 2.2rem 2rem 1.5rem 2rem;
+        border: 1.5px solid #e3e8f1;
+        margin: 2rem 2rem 2rem 2rem;
+        max-width: 670px;
+    }
+    .subproduct-add-card h3 {
+        font-size: 1.18rem;
+        font-weight: 700;
+        color: #a21caf;
+        margin-bottom: 1rem;
+        letter-spacing: -0.3px;
+    }
+    .subproduct-add-card button[type="submit"] {
+        background: linear-gradient(90deg, #818cf8 80%, #a21caf 100%);
+        color: #fff;
+        font-weight: 700;
+        border: none;
+        border-radius: 8px;
+        padding: 0.68rem 1.8rem;
+        box-shadow: 0 2px 8px #a21caf11;
+        margin-top: .8rem;
+        transition: background 0.16s;
+    }
+    .subproduct-add-card button[type="submit"]:hover {
+        background: linear-gradient(90deg, #a21caf 60%, #818cf8 100%);
+    }
+
+    .subproduct-table-wrap {
+        padding: 0 2rem 2.4rem 2rem;
+        overflow-x: auto;
+    }
+    .subproduct-admin-table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+        background: #fff;
+        border-radius: 16px;
+        box-shadow: 0 1px 10px #140e4a09;
+        margin-top: 1rem;
+        font-size: 1rem;
+        min-width: 700px;
+    }
+    .subproduct-admin-table th, .subproduct-admin-table td {
+        padding: 1rem 1.1rem;
+        text-align: left;
+    }
+    .subproduct-admin-table th {
+        background: linear-gradient(90deg, #ede9fe 85%, #f3f8ff 100%);
+        color: #5b21b6;
+        font-weight: 800;
+        border-bottom: 2px solid #e1e8ff;
+        font-size: 1.06rem;
+        letter-spacing: 0.04em;
+    }
+    .subproduct-admin-table tr:not(:last-child) td {
+        border-bottom: 1px solid #e6e9f3;
+    }
+    .subproduct-admin-table td {
+        color: #252b4d;
+        background: #fff;
+        vertical-align: middle;
+    }
+    .subproduct-admin-table tr:hover td {
+        background: #f3f8ff;
+        transition: background 0.16s;
+    }
+    .sub-action-btn {
+        background: none;
+        border: none;
+        padding: 0.4rem 1rem;
+        border-radius: 6px;
+        cursor: pointer;
+        color: #a21caf;
+        font-weight: 700;
+        font-size: 1.02rem;
+        transition: background 0.13s, color 0.13s;
+        display: inline-flex; align-items: center; gap: 0.3rem;
+    }
+    .sub-action-btn:hover {
+        background: #f3e8ff;
+        color: #5b21b6;
+        text-decoration: underline;
+    }
+    @media (max-width: 900px) {
+        .subproduct-admin-main { padding: 0.7rem; }
+        .subproduct-admin-header { padding: 1.2rem 1rem 1rem 1rem; }
+        .subproduct-add-card, .subproduct-table-wrap { padding: 0.7rem 0.7rem 1.2rem 0.7rem;}
+        .subproduct-toolbar { padding: 1.1rem 1rem;}
+    }
+    @media (max-width: 700px) {
+        .subproduct-toolbar { flex-direction: column; gap: 1.3rem; }
+        .subproduct-admin-main { border-radius: 0; margin: 0; }
+        .subproduct-add-card { max-width: 100vw;}
+        .subproduct-table-wrap { padding: 0 0 1.2rem 0; }
+    }
+</style>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+{% endblock %}
+
+{% block content %}
+<div class="subproduct-admin-main">
+    <div class="subproduct-admin-header">
+        <i class="fa-solid fa-puzzle-piece"></i>
+        <h2>Manage Subproducts</h2>
+    </div>
+
+    <!-- Filter Dropdown -->
+    <form method="get" class="subproduct-toolbar">
+        <div>
+            <label for="product">Filter by Product:</label>
+            <select name="product" id="product" onchange="this.form.submit()">
+                <option value="">All Products</option>
+                {% for p in products %}
+                    <option value="{{ p.id }}" {% if p.id|stringformat:'s' == selected_product %}selected{% endif %}>{{ p.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+    </form>
+
+    <!-- Form Error Block -->
+    {% if form.errors %}
+    <div class="subproduct-form-errors">
+        <ul>
+            {% for field in form %}
+                {% for error in field.errors %}
+                    <li>{{ error }}</li>
+                {% endfor %}
+            {% endfor %}
+            {% for error in form.non_field_errors %}
+                <li>{{ error }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+
+    <!-- Add Subproduct Form -->
+    <div class="subproduct-add-card">
+        <h3>
+            <i class="fa-solid fa-plus-circle mr-1" style="color:#a21caf;"></i>
+            Add New Subproduct
+        </h3>
+        <form method="POST" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <div class="md:col-span-2">
+                <button type="submit" style="width:170px;">
+                    <i class="fa-solid fa-circle-check mr-1"></i>
+                    Add Subproduct
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Subproduct Table -->
+    <div class="subproduct-table-wrap">
+        <table class="subproduct-admin-table">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Product</th>
+                    <th>Created At</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in items %}
+                <tr>
+                    <td>{{ item.name }}</td>
+                    <td>{{ item.product.name }}</td>
+                    <td>{{ item.created_at|date:"Y-m-d H:i" }}</td>
+                    <td>
+                        <form method="POST" action="{% url 'delete_subproduct' item.id %}" style="display:inline;" onsubmit="return confirm('Delete subproduct {{ item.name }}?');">
+                            {% csrf_token %}
+                            <button type="submit" class="sub-action-btn">
+                                <i class="fa-solid fa-trash-can"></i>
+                                Delete
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="4" class="text-center text-gray-500 py-6">No subproducts found.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

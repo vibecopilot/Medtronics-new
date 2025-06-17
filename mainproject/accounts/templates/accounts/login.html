@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+
+{% block content %}
+<!-- Floating Message Block -->
+{% if messages %}
+<div id="django-messages" class="fixed top-5 left-1/2 transform -translate-x-1/2 z-50 w-full max-w-md px-4">
+    {% for message in messages %}
+    <div class="relative flex items-center gap-4 mb-2 px-4 py-3 rounded shadow-lg text-white
+        {% if message.tags == 'success' %}bg-green-600{% elif message.tags == 'error' %}bg-red-600{% elif message.tags == 'warning' %}bg-yellow-500{% else %}bg-blue-600{% endif %}"
+        data-msg>
+        <span class="flex-1">{{ message }}</span>
+        <button type="button"
+            class="ml-2 text-white text-xl font-bold focus:outline-none hover:text-gray-300"
+            onclick="this.closest('[data-msg]').remove();">
+            &times;
+        </button>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+
+<div class="min-h-screen flex flex-col md:flex-row">
+
+    <!-- Title and Description Section -->
+    <div class="md:w-1/2 flex items-center justify-center bg-gradient-to-br from-[#140e4a] to-[#2c2c6c] text-white p-10 md:p-16">
+        <div class="max-w-2xl text-center">
+            <h2 class="text-4xl md:text-5xl font-extrabold mb-6">Welcome Back!</h2>
+            <p class="text-lg md:text-xl">Enter your credentials to access your dashboard. If you don't have an account, please register first.</p>
+        </div>
+    </div>
+
+    <!-- Login Form Section -->
+    <div class="md:w-1/2 flex items-center justify-center bg-white p-10 md:p-16">
+        <form method="POST" class="w-full max-w-md">
+            {% csrf_token %}
+
+            {% if form.non_field_errors %}
+            <div class="text-[#140e4a] text-sm mb-4">
+                {% for error in form.non_field_errors %}
+                <p>{{ error }}</p>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            <div class="space-y-5">
+                {% for field in form %}
+                <div>
+                    {{ field.label_tag }}
+                    {{ field|add_class:"w-full py-3 px-4 border border-gray-300 rounded-md text-base shadow-sm focus:outline-none focus:ring-2 focus:ring-[#140e4a] transition duration-200" }}
+                    {% if field.errors %}
+                    <ul class="text-[#140e4a] text-sm mt-1">
+                        {% for error in field.errors %}
+                        <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
+                </div>
+                {% endfor %}
+
+                <button type="submit" class="w-full py-3 bg-[#140e4a] text-white rounded-md font-semibold hover:bg-[#2c2c6c] transition-colors duration-300">
+                    Login
+                </button>
+                <a href="{% url 'register' %}" 
+                class="w-full inline-block py-3 bg-white border border-[#140e4a] text-[#140e4a] rounded-md font-semibold text-center hover:bg-[#140e4a] hover:text-white transition-colors duration-300">
+                 Don't have an account? Register
+             </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    setTimeout(function() {
+        document.querySelectorAll('#django-messages [data-msg]').forEach(function(msg) {
+            msg.remove();
+        });
+    }, 5000); // 5000ms = 5 seconds
+});
+</script>
+{% endblock %}

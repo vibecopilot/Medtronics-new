@@ -1,0 +1,105 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{% block title %}Healthcare Interactive Site{% endblock %}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="{% static 'css/healthcare.css' %}">
+    {% block extra_css %}{% endblock %}
+</head>
+
+<body class="bg-gray-50 min-h-screen">
+    <!-- HEADER -->
+    <header class="bg-[#140e4a] text-white shadow-lg">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+            <h1 class="text-2xl font-bold">
+                <a href="{% url 'home' %}" class="hover:text-blue-200 transition-colors duration-200">
+                    Medtronic
+                </a>
+            </h1>
+            <nav class="flex gap-8 text-sm font-medium">
+                {% if user.is_authenticated %}
+                    <span class="text-blue-200">Welcome, {{ user.first_name|default:user.username }}</span>
+                    <a href="{% url 'logout' %}" class="hover:text-blue-200 transition-colors duration-200">Logout</a>
+                    <a href="{% url 'home' %}" class="hover:text-blue-200 transition-colors duration-200">My Inventory</a>
+                {% else %}
+                    <a href="#" onclick="openLoginModal()" class="hover:text-blue-200 transition-colors duration-200">Login</a>
+                    <a href="#" onclick="openRegisteredModal()" class="hover:text-blue-200 transition-colors duration-200">Register</a>
+                {% endif %}
+            </nav>
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT -->
+    {% block content %}
+    {% endblock %}
+
+    <!-- FOOTER -->
+    <footer class="bg-[#140e4a] text-white">
+        <div class="max-w-7xl mx-auto px-6 py-12 grid grid-cols-1 md:grid-cols-4 gap-8">
+            <div>
+                <h4 class="font-bold mb-4 text-lg">PATIENTS AND CAREGIVERS</h4>
+                <ul class="space-y-3 text-sm">
+                    <li><a href="#" class="hover:text-blue-200 transition-colors duration-200">Overview</a></li>
+                    <li><a href="#" class="hover:text-blue-200 transition-colors duration-200">Conditions</a></li>
+                    <li><a href="#" class="hover:text-blue-200 transition-colors duration-200">Treatments & Therapies</a></li>
+                    <li><a href="#" class="hover:text-blue-200 transition-colors duration-200">Response Care</a></li>
+                    <li><a href="#" class="hover:text-blue-200 transition-colors duration-200">DBS Sahayata</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="font-bold mb-4 text-lg">HEALTHCARE PROFESSIONALS</h4>
+                <ul class="space-y-3 text-sm">
+                    <li><a href="#" class="hover:text-blue-200 transition-colors duration-200">Overview</a></li>
+                    <li><a href="#" class="hover:text-blue-200 transition-colors duration-200">Therapies & Procedures</a></li>
+                    <li><a href="#" class="hover:text-blue-200 transition-colors duration-200">Products</a></li>
+                    <li><a href="#" class="hover:text-blue-200 transition-colors duration-200">Clinical Resources</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="font-bold mb-4 text-lg">OUR COMPANY</h4>
+                <ul class="space-y-3 text-sm">
+                    <li><a href="#" class="hover:text-blue-200 transition-colors duration-200">Who we are</a></li>
+                    <li><a href="#" class="hover:text-blue-200 transition-colors duration-200">Mission</a></li>
+                    <li><a href="#" class="hover:text-blue-200 transition-colors duration-200">Leadership</a></li>
+                    <li><a href="#" class="hover:text-blue-200 transition-colors duration-200">Medtronic in India</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="font-bold mb-4 text-lg">OUR IMPACT</h4>
+                <ul class="space-y-3 text-sm">
+                    <li><a href="#" class="hover:text-blue-200 transition-colors duration-200">Impact Reporting</a></li>
+                    <li><a href="#" class="hover:text-blue-200 transition-colors duration-200">Health Equity</a></li>
+                    <li><a href="#" class="hover:text-blue-200 transition-colors duration-200">Diversity & Equity</a></li>
+                    <li><a href="#" class="hover:text-blue-200 transition-colors duration-200">Planet</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="border-t border-gray-600">
+            <div class="max-w-7xl mx-auto px-6 py-6 flex flex-col md:flex-row justify-between items-center text-sm">
+                <p>&copy; 2025 Medtronic. All rights reserved.</p>
+                <div class="flex gap-6 mt-4 md:mt-0">
+                    <a href="#" class="hover:text-blue-200 transition-colors duration-200">Privacy Policy</a>
+                    <a href="#" class="hover:text-blue-200 transition-colors duration-200">Terms of Use</a>
+                    <a href="#" class="hover:text-blue-200 transition-colors duration-200">Contact Us</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Modal Overlay -->
+    <div id="modalOverlay" class="modal-overlay"></div>
+
+    <!-- Include all modals -->
+    {% block modals %}
+    {% endblock %}
+
+    <script src="{% static 'js/modals.js' %}"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+
+</html>

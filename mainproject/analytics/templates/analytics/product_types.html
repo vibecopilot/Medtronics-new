@@ -1,0 +1,292 @@
+{% extends 'admin.html' %}
+
+{% block style %}
+<style>
+    .pt-admin-main {
+        background: linear-gradient(133deg, #f6f8fa 0%, #ecf3fb 100%);
+        border-radius: 24px;
+        box-shadow: 0 8px 32px #140e4a12;
+        padding: 0;
+        max-width: 1080px;
+        margin: 3rem auto 2rem auto;
+        border: 1.5px solid #e3e8f1;
+        overflow: hidden;
+    }
+    .pt-admin-header {
+        background: linear-gradient(90deg, #140e4a 70%, #38bdf8 100%);
+        padding: 2.2rem 2rem 1.2rem 2rem;
+        color: #fff;
+        display: flex;
+        align-items: center;
+        gap: 1.2rem;
+        border-radius: 24px 24px 0 0;
+    }
+    .pt-admin-header i {
+        font-size: 2.2rem;
+        color: #fbbf24;
+        opacity: 0.88;
+        margin-right: 0.5rem;
+    }
+    .pt-admin-header h2 {
+        font-size: 2.1rem;
+        font-weight: 800;
+        margin: 0;
+        letter-spacing: -0.5px;
+        line-height: 1.1;
+    }
+    .pt-admin-toolbar {
+        background: #f1f6fb;
+        padding: 1.2rem 2rem;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 2.2rem;
+        align-items: flex-end;
+        border-bottom: 1px solid #e3e8f1;
+        border-top: 1px solid #e3e8f1;
+    }
+    .pt-admin-toolbar label {
+        font-weight: 600; color: #1a1560; margin-bottom: .38rem; font-size: 1rem;
+    }
+    .pt-admin-toolbar select, .pt-admin-toolbar input[type="text"] {
+        border: 1.5px solid #c7d6ea;
+        border-radius: 9px;
+        font-size: 1rem;
+        padding: 0.77rem 1.1rem;
+        background: #fff;
+        min-width: 190px;
+        box-shadow: 0 2px 8px #e3e8f13a;
+        margin-top: .08rem;
+        transition: border-color 0.17s;
+    }
+    .pt-admin-toolbar select:focus, .pt-admin-toolbar input[type="text"]:focus {
+        outline: none;
+        border-color: #38bdf8;
+        box-shadow: 0 2px 8px #38bdf84a;
+    }
+    .pt-admin-toolbar .pt-toolbar-actions {
+        margin-left: auto;
+        display: flex; gap: 0.9rem;
+    }
+    .pt-admin-toolbar button[type="submit"] {
+        background: linear-gradient(90deg, #2563eb 80%, #0ea5e9 100%);
+        color: #fff;
+        font-weight: 700;
+        padding: 0.7rem 1.8rem;
+        border-radius: 9px;
+        border: none;
+        font-size: 1.02rem;
+        box-shadow: 0 3px 12px #2196f31a;
+        transition: background 0.17s, box-shadow 0.18s;
+    }
+    .pt-admin-toolbar button[type="submit"]:hover {
+        background: linear-gradient(90deg, #0ea5e9 60%, #2563eb 100%);
+        box-shadow: 0 6px 22px #2563eb1a;
+    }
+
+    .pt-form-errors {
+        background: #fde4e4;
+        color: #c0392b;
+        border-left: 5px solid #e74c3c;
+        padding: 1rem 1.2rem;
+        border-radius: 10px;
+        margin: 2rem 2rem 0 2rem;
+        font-size: 1.01rem;
+        box-shadow: 0 1px 6px #e74c3c0d;
+    }
+
+    .pt-add-card {
+        background: #fff;
+        border-radius: 18px;
+        box-shadow: 0 1px 8px #140e4a0c;
+        padding: 2.2rem 2rem 1.5rem 2rem;
+        border: 1.5px solid #e3e8f1;
+        margin: 2rem 2rem 2rem 2rem;
+        max-width: 640px;
+    }
+    .pt-add-card h3 {
+        font-size: 1.18rem;
+        font-weight: 700;
+        color: #1740b0;
+        margin-bottom: 1rem;
+        letter-spacing: -0.3px;
+    }
+    .pt-add-card button[type="submit"] {
+        background: linear-gradient(90deg, #22c55e 80%, #2563eb 100%);
+        color: #fff;
+        font-weight: 700;
+        border: none;
+        border-radius: 8px;
+        padding: 0.68rem 1.8rem;
+        box-shadow: 0 2px 8px #22c55e10;
+        margin-top: .8rem;
+        transition: background 0.16s;
+    }
+    .pt-add-card button[type="submit"]:hover {
+        background: linear-gradient(90deg, #2563eb 70%, #22c55e 100%);
+    }
+
+    .pt-table-wrap {
+        padding: 0 2rem 2.4rem 2rem;
+        overflow-x: auto;
+    }
+    .pt-admin-table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+        background: #fff;
+        border-radius: 16px;
+        box-shadow: 0 1px 10px #140e4a09;
+        margin-top: 1rem;
+        font-size: 1rem;
+        min-width: 670px;
+    }
+    .pt-admin-table th, .pt-admin-table td {
+        padding: 1rem 1.1rem;
+        text-align: left;
+    }
+    .pt-admin-table th {
+        background: linear-gradient(90deg, #f5f8ff 85%, #e3e8f1 100%);
+        color: #1a1560;
+        font-weight: 800;
+        border-bottom: 2px solid #e1e8ff;
+        font-size: 1.06rem;
+        letter-spacing: 0.04em;
+    }
+    .pt-admin-table tr:not(:last-child) td {
+        border-bottom: 1px solid #e6e9f3;
+    }
+    .pt-admin-table td {
+        color: #252b4d;
+        background: #fff;
+        vertical-align: middle;
+    }
+    .pt-admin-table tr:hover td {
+        background: #f3f8ff;
+        transition: background 0.16s;
+    }
+    .pt-action-btn {
+        background: none;
+        border: none;
+        padding: 0.4rem 1rem;
+        border-radius: 6px;
+        cursor: pointer;
+        color: #e74c3c;
+        font-weight: 700;
+        font-size: 1.02rem;
+        transition: background 0.13s, color 0.13s;
+        display: inline-flex; align-items: center; gap: 0.3rem;
+    }
+    .pt-action-btn:hover {
+        background: #fdeaea;
+        color: #c0392b;
+        text-decoration: underline;
+    }
+    @media (max-width: 900px) {
+        .pt-admin-main { padding: 0.7rem; }
+        .pt-admin-header { padding: 1.2rem 1rem 1rem 1rem; }
+        .pt-add-card, .pt-table-wrap { padding: 0.7rem 0.7rem 1.2rem 0.7rem;}
+        .pt-admin-toolbar { padding: 1.1rem 1rem;}
+    }
+    @media (max-width: 700px) {
+        .pt-admin-toolbar { flex-direction: column; gap: 1.3rem; }
+        .pt-admin-main { border-radius: 0; margin: 0; }
+        .pt-add-card { max-width: 100vw;}
+        .pt-table-wrap { padding: 0 0 1.2rem 0; }
+    }
+</style>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+{% endblock %}
+
+{% block content %}
+<div class="pt-admin-main">
+    <div class="pt-admin-header">
+        <i class="fa-solid fa-cubes"></i>
+        <h2>Manage Product Types</h2>
+    </div>
+
+    <form method="get" class="pt-admin-toolbar">
+        <div>
+            <label>Filter by Product Category:</label>
+            <select name="product_category" onchange="this.form.submit()">
+                <option value="">All Categories</option>
+                {% for pc in product_categories %}
+                    <option value="{{ pc.id }}" {% if pc.id|stringformat:'s' == selected_pc %}selected{% endif %}>{{ pc.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div>
+            <label>Search Product Type:</label>
+            <input type="text" name="search" value="{{ request.GET.search }}" placeholder="Enter type name" />
+        </div>
+        <div class="pt-toolbar-actions">
+            <button type="submit">
+                <i class="fa-solid fa-filter mr-1"></i>Apply Filters
+            </button>
+        </div>
+    </form>
+
+    {% if form.errors %}
+    <div class="pt-form-errors">
+        <ul>
+            {% for field in form %}
+                {% for error in field.errors %}
+                    <li>{{ error }}</li>
+                {% endfor %}
+            {% endfor %}
+            {% for error in form.non_field_errors %}
+                <li>{{ error }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+
+    <div class="pt-add-card">
+        <h3><i class="fa-solid fa-plus-circle mr-1" style="color:#22c55e;"></i>Add New Product Type</h3>
+        <form method="POST" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <div class="md:col-span-2">
+                <button type="submit" style="width:170px;">
+                    <i class="fa-solid fa-circle-check mr-1"></i>
+                    Add Product Type
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <div class="pt-table-wrap">
+        <table class="pt-admin-table">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Product Category</th>
+                    <th>Created At</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in items %}
+                <tr>
+                    <td>{{ item.name }}</td>
+                    <td>{{ item.product_category.name }}</td>
+                    <td>{{ item.created_at|date:"Y-m-d H:i" }}</td>
+                    <td>
+                        <form method="POST" action="{% url 'delete_product_type' item.id %}" style="display:inline;" onsubmit="return confirm('Delete product type {{ item.name }}?');">
+                            {% csrf_token %}
+                            <button type="submit" class="pt-action-btn">
+                                <i class="fa-solid fa-trash-can"></i>
+                                Delete
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="4" class="text-center text-gray-500 py-6">No product types found.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

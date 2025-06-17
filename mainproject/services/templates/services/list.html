@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h2 class="section-title">Request Logs</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Request Type</th>
+                <th>Product</th>
+                <th>Status</th>
+                <th>Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for log in request_logs %}
+                <tr>
+                    <td>{{ log.name }}</td>
+                    <td>{{ log.request_type.name }}</td>
+                    <td>{{ log.product.name }}</td>
+                    <td>{{ log.get_status_display }}</td>
+                    <td>{{ log.created_at }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

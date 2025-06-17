@@ -1,0 +1,177 @@
+{% extends 'admin.html' %}
+
+{% block style %}
+<style>
+    .category-engagement-card {
+        background: linear-gradient(120deg, #f8fafc 60%, #e8ebf7 100%);
+        border-radius: 22px;
+        box-shadow: 0 8px 32px #140e4a14;
+        padding: 2.2rem 1.5rem 2.4rem 1.5rem;
+        max-width: 900px;
+        margin: 2.5rem auto;
+        border: 1.5px solid #e3e8f1;
+    }
+    .cat-title {
+        font-size: 2rem;
+        font-weight: 900;
+        color: #140e4a;
+        margin-bottom: 2.1rem;
+        letter-spacing: -0.5px;
+        border-bottom: 2.5px solid #38bdf8;
+        padding-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+    .cat-title i {
+        font-size: 1.7rem;
+        color: #0ea5e9;
+        margin-right: 0.5rem;
+    }
+    .filter-bar {
+        display: flex; flex-wrap: wrap; gap: 1.2rem; align-items: flex-end;
+        margin-bottom: 2.2rem;
+    }
+    .filter-bar label {
+        font-weight: 700; color: #1a1560; font-size: 1rem; margin-bottom: 0.2rem; display: block;
+    }
+    .filter-bar select {
+        border: 1.5px solid #e1e8ff;
+        border-radius: 9px;
+        font-size: 1rem;
+        padding: 0.7rem 1.1rem;
+        min-width: 110px;
+        background: #f7faff;
+        margin-left: 0.3rem;
+        box-shadow: 0 2px 8px #e3e8f13a;
+        transition: border-color 0.13s;
+    }
+    .filter-bar select:focus {
+        border-color: #0ea5e9;
+        background: #fff;
+        outline: none;
+    }
+    .filter-bar button[type="submit"] {
+        background: linear-gradient(90deg, #0ea5e9 70%, #38bdf8 100%);
+        color: #fff;
+        font-weight: 700;
+        padding: 0.73rem 2.1rem;
+        border-radius: 10px;
+        border: none;
+        font-size: 1.04rem;
+        box-shadow: 0 3px 12px #38bdf819;
+        transition: background 0.17s, box-shadow 0.18s;
+        margin-top: 0.1rem;
+    }
+    .filter-bar button[type="submit"]:hover {
+        background: linear-gradient(90deg, #38bdf8 60%, #0ea5e9 100%);
+        box-shadow: 0 4px 24px #0ea5e929;
+    }
+    .category-table {
+        width: 100%;
+        border-radius: 14px;
+        background: #fff;
+        overflow: hidden;
+        border-collapse: separate;
+        border-spacing: 0;
+        box-shadow: 0 2px 12px #140e4a0c;
+        margin-top: 1.2rem;
+        font-size: 1rem;
+    }
+    .category-table th, .category-table td {
+        padding: 1rem 1.2rem;
+        text-align: left;
+        vertical-align: middle;
+    }
+    .category-table th {
+        background: linear-gradient(90deg, #bae6fd 85%, #e0f2fe 100%);
+        color: #0ea5e9;
+        font-weight: 800;
+        font-size: 1.03rem;
+        border-bottom: 2.5px solid #bae6fd;
+    }
+    .category-table td {
+        color: #2a2936;
+        background: #fff;
+        border-bottom: 1px solid #e0f2fe;
+        transition: background 0.15s;
+    }
+    .category-table tr:last-child td {
+        border-bottom: none;
+    }
+    .category-table tr:hover td {
+        background: #e0f2fe;
+    }
+    .no-data-row {
+        text-align: center;
+        color: #a7b7c7;
+        font-style: italic;
+    }
+    @media (max-width: 800px) {
+        .category-engagement-card { padding: 1rem; }
+        .cat-title { font-size: 1.3rem; }
+        .category-table th, .category-table td { padding: 0.7rem 0.7rem; }
+    }
+    @media (max-width: 600px) {
+        .filter-bar { flex-direction: column; gap: 1.1rem;}
+        .category-engagement-card { margin: 1rem 0.2rem; }
+        .cat-title { font-size: 1.09rem;}
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="category-engagement-card">
+    <div class="cat-title">
+        <i class="fa-solid fa-chart-pie"></i>
+        Top Product Categories by Engagement
+    </div>
+
+    <form method="get" class="filter-bar">
+        <div>
+            <label for="year">Year:</label>
+            <select name="year" id="year">
+                <option value="">All</option>
+                {% for y in years %}
+                    <option value="{{ y }}" {% if y|stringformat:"s" == selected_year %}selected{% endif %}>{{ y }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div>
+            <label for="month">Month:</label>
+            <select name="month" id="month">
+                <option value="">All</option>
+                {% for m in months %}
+                    <option value="{{ m.value }}" {% if m.value|stringformat:"s" == selected_month %}selected{% endif %}>{{ m.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <button type="submit"><i class="fa-solid fa-filter mr-1"></i> Apply</button>
+    </form>
+
+    <div class="overflow-x-auto">
+        <table class="category-table">
+            <thead>
+                <tr>
+                    <th><i class="fa-solid fa-layer-group mr-1 text-sky-600"></i> Category</th>
+                    <th><i class="fa-solid fa-bolt mr-1 text-sky-600"></i> Engagement Count</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in categories %}
+                <tr>
+                    <td>{{ item.product__product_type__product_category__name }}</td>
+                    <td>{{ item.total }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="2" class="no-data-row py-6">No data available for selected filter</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+<!-- Font Awesome CDN for icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+{% endblock %}
