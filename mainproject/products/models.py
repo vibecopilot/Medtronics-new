@@ -8,6 +8,7 @@ class Category(models.Model):
     name = models.CharField(max_length=100)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    is_avaliable=models.BooleanField(default=True)
 
     def __str__(self):
         return self.name
@@ -54,8 +55,7 @@ class Product(models.Model):
         validators=[FileExtensionValidator(allowed_extensions=['mp4', 'mov', 'avi', 'mkv'])],
         help_text="Upload video file (e.g., .mp4, .mov)"
     )
-
-
+    
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -64,15 +64,19 @@ class Product(models.Model):
 
 
 class Subproduct(models.Model):
+    item_number = models.IntegerField(null=True, blank=True)  # fixed typo and blank=True for optional
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name="subproducts")
     name = models.CharField(max_length=100)
-    description = models.TextField()
-    unit = models.IntegerField()
+    description = models.TextField(blank=True, null=True)  # make description optional too if needed
+    color = models.CharField(max_length=8, null=True, blank=True)
+    size = models.CharField(max_length=7, null=True, blank=True)
+    unit = models.IntegerField(null=True, blank=True)  # allow null/blank for optional field
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return f"{self.name} ({self.product.name})"
+
 
 
 class Region(models.Model):
@@ -95,9 +99,10 @@ class OrderProductOnline(models.Model):
         DELIVERED = "delivered", "Delivered"
 
     region = models.ForeignKey(Region, on_delete=models.PROTECT, related_name="orders")
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="orders")
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="orders",null=True)
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name="orders")
     name = models.CharField(max_length=100, help_text="Person requesting")
+    email=models.EmailField(max_length=50,null=True,blank=False)
     address = models.TextField(help_text="Full address of requester")
     number = models.CharField(max_length=15, help_text="Contact number")
     order_date = models.DateTimeField(default=timezone.now)

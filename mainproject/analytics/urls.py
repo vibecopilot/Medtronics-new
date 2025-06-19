@@ -28,6 +28,13 @@ urlpatterns = [
     path('delete-product-type/<int:pk>/', views.delete_product_type, name='delete_product_type'),
     path('delete-product/<int:pk>/', views.delete_product, name='delete_product'),
     path('delete-subproduct/<int:pk>/', views.delete_subproduct, name='delete_subproduct'),
+    path('ajax/product-categories/', views.ajax_product_categories, name='ajax_product_categories'),
+
+    path('ajax/product_types/', views.ajax_product_types, name='ajax_product_types'),
+    path('ajax/products/', views.ajax_products, name='ajax_products'),
+
+
+
 
 
 ]

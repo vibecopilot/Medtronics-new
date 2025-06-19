@@ -1,4 +1,5 @@
 {% extends 'admin.html' %}
+{% load widget_tweaks %}
 
 {% block style %}
 <style>
@@ -27,6 +28,253 @@
         opacity: 0.88;
         margin-right: 0.6rem;
     }
+    .products-admin-main {
+    max-width: 1080px;
+    margin: 3rem auto 2rem auto;
+    background: linear-gradient(130deg, #f8fafc 0%, #e8ebf7 100%);
+    border-radius: 24px;
+    box-shadow: 0 8px 32px #140e4a12;
+    border: 1.5px solid #e3e8f1;
+    overflow: hidden;
+    padding: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #333;
+}
+
+.products-admin-header {
+    background: linear-gradient(90deg, #2563eb 70%, #38bdf8 100%);
+    padding: 2.1rem 2rem 1.1rem 2rem;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    gap: 1.2rem;
+    border-radius: 24px 24px 0 0;
+    font-weight: 700;
+    font-size: 1.8rem;
+}
+
+.products-admin-header i {
+    font-size: 2.1rem;
+    color: #facc15;
+    opacity: 0.88;
+    margin-right: 0.6rem;
+}
+
+.products-admin-toolbar {
+    background: #f1f6fb;
+    padding: 1.2rem 2rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2.2rem;
+    align-items: flex-end;
+    border-bottom: 1px solid #e3e8f1;
+    border-top: 1px solid #e3e8f1;
+}
+
+.products-admin-toolbar label {
+    font-weight: 600;
+    color: #1a1560;
+    margin-bottom: 0.36rem;
+    font-size: 1rem;
+}
+
+.products-admin-toolbar select,
+.products-admin-toolbar input[type="text"] {
+    border: 1.5px solid #c7d6ea;
+    border-radius: 9px;
+    font-size: 1rem;
+    padding: 0.77rem 1.1rem;
+    background: #fff;
+    min-width: 190px;
+    box-shadow: 0 2px 8px #e3e8f13a;
+    margin-top: 0.08rem;
+    transition: border-color 0.17s;
+}
+
+.products-admin-toolbar select:focus,
+.products-admin-toolbar input[type="text"]:focus {
+    outline: none;
+    border-color: #38bdf8;
+    box-shadow: 0 2px 8px #38bdf84a;
+}
+
+.pt-toolbar-actions {
+    margin-left: auto;
+    display: flex;
+    gap: 0.9rem;
+}
+
+.pt-toolbar-actions button[type="submit"] {
+    background: linear-gradient(90deg, #2563eb 80%, #0ea5e9 100%);
+    color: #fff;
+    font-weight: 700;
+    padding: 0.7rem 1.8rem;
+    border-radius: 9px;
+    border: none;
+    font-size: 1.02rem;
+    box-shadow: 0 3px 12px #2196f31a;
+    transition: background 0.17s, box-shadow 0.18s;
+    cursor: pointer;
+}
+
+.pt-toolbar-actions button[type="submit"]:hover {
+    background: linear-gradient(90deg, #0ea5e9 60%, #2563eb 100%);
+    box-shadow: 0 6px 22px #2563eb1a;
+}
+
+.products-form-errors {
+    background: #fde4e4;
+    color: #c0392b;
+    border-left: 5px solid #e74c3c;
+    padding: 1rem 1.2rem;
+    border-radius: 10px;
+    margin: 2rem 2rem 0 2rem;
+    font-size: 1.01rem;
+    box-shadow: 0 1px 6px #e74c3c0d;
+}
+
+.products-add-card {
+    background: #fff;
+    border-radius: 18px;
+    box-shadow: 0 1px 8px #140e4a0c;
+    padding: 2.2rem 2rem 1.5rem 2rem;
+    border: 1.5px solid #e3e8f1;
+    margin: 2rem 2rem 2rem 2rem;
+    max-width: 670px;
+}
+
+.products-add-card h3 {
+    font-size: 1.18rem;
+    font-weight: 700;
+    color: #2563eb;
+    margin-bottom: 1rem;
+    letter-spacing: -0.3px;
+}
+
+.products-add-card button[type="submit"] {
+    background: linear-gradient(90deg, #22c55e 80%, #2563eb 100%);
+    color: #fff;
+    font-weight: 700;
+    border: none;
+    border-radius: 8px;
+    padding: 0.68rem 1.8rem;
+    box-shadow: 0 2px 8px #22c55e10;
+    margin-top: 0.8rem;
+    transition: background 0.16s;
+    cursor: pointer;
+}
+
+.products-add-card button[type="submit"]:hover {
+    background: linear-gradient(90deg, #2563eb 70%, #22c55e 100%);
+}
+
+.products-table-wrap {
+    padding: 0 2rem 2.4rem 2rem;
+    overflow-x: auto;
+}
+
+.products-admin-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 1px 10px #140e4a09;
+    margin-top: 1rem;
+    font-size: 1rem;
+    min-width: 700px;
+}
+
+.products-admin-table th,
+.products-admin-table td {
+    padding: 1rem 1.1rem;
+    text-align: left;
+}
+
+.products-admin-table th {
+    background: linear-gradient(90deg, #f5f8ff 85%, #e3e8f1 100%);
+    color: #1a1560;
+    font-weight: 800;
+    border-bottom: 2px solid #e1e8ff;
+    font-size: 1.06rem;
+    letter-spacing: 0.04em;
+}
+
+.products-admin-table tr:not(:last-child) td {
+    border-bottom: 1px solid #e6e9f3;
+}
+
+.products-admin-table td {
+    color: #252b4d;
+    background: #fff;
+    vertical-align: middle;
+}
+
+.products-admin-table tr:hover td {
+    background: #f3f8ff;
+    transition: background 0.16s;
+}
+
+.pt-action-btn {
+    background: none;
+    border: none;
+    padding: 0.4rem 1rem;
+    border-radius: 6px;
+    cursor: pointer;
+    color: #e74c3c;
+    font-weight: 700;
+    font-size: 1.02rem;
+    transition: background 0.13s, color 0.13s;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+}
+
+.pt-action-btn:hover {
+    background: #fdeaea;
+    color: #c0392b;
+    text-decoration: underline;
+}
+
+@media (max-width: 900px) {
+    .products-admin-main {
+        padding: 0.7rem;
+    }
+
+    .products-admin-header {
+        padding: 1.2rem 1rem 1rem 1rem;
+    }
+
+    .products-add-card,
+    .products-table-wrap {
+        padding: 0.7rem 0.7rem 1.2rem 0.7rem;
+    }
+
+    .products-admin-toolbar {
+        padding: 1.1rem 1rem;
+    }
+}
+
+@media (max-width: 700px) {
+    .products-admin-toolbar {
+        flex-direction: column;
+        gap: 1.3rem;
+    }
+
+    .products-admin-main {
+        border-radius: 0;
+        margin: 0;
+    }
+
+    .products-add-card {
+        max-width: 100vw;
+    }
+
+    .products-table-wrap {
+        padding: 0 0 1.2rem 0;
+    }
+}
+
     .products-admin-header h2 {
         font-size: 2.08rem;
         font-weight: 800;
@@ -203,30 +451,50 @@
         <i class="fa-solid fa-cube"></i>
         <h2>Manage Products</h2>
     </div>
-
-    <!-- Filter & Search -->
+    
+    <!-- Filter & Search (GET FORM) -->
     <form method="get" class="products-admin-toolbar">
         <div>
-            <label>Filter by Product Type:</label>
-            <select name="product_type" onchange="this.form.submit()">
-                <option value="">All Types</option>
-                {% for pt in product_types %}
-                    <option value="{{ pt.id }}" {% if pt.id|stringformat:'s' == selected_type %}selected{% endif %}>
-                        {{ pt.name }}
-                    </option>
+            <label>Filter by Category:</label>
+            <select name="category" onchange="this.form.submit()">
+                <option value="">All Categories</option>
+                {% for cat in categories %}
+                <option value="{{ cat.id }}" {% if cat.id|stringformat:'s' == selected_cat %}selected{% endif %}>{{ cat.name }}</option>
                 {% endfor %}
             </select>
         </div>
+    
+        <div>
+            <label>Filter by Product Category:</label>
+            <select name="product_category" onchange="this.form.submit()">
+                <option value="">All Product Categories</option>
+                {% for pc in product_categories %}
+                    {% if pc.category_id|stringformat:'s' == selected_cat %}
+                        <option value="{{ pc.id }}" {% if pc.id|stringformat:'s' == selected_pc %}selected{% endif %}>{{ pc.name }}</option>
+                    {% endif %}
+                {% endfor %}
+            </select>
+        </div>
+    
+        <div>
+            <label>Filter by Product Type:</label>
+            <select name="product_type" onchange="this.form.submit()">
+                <option value="">All Product Types</option>
+                {% for pt in product_types %}
+                    {% if pt.product_category.category_id|stringformat:'s' == selected_cat and pt.product_category_id|stringformat:'s' == selected_pc %}
+                        <option value="{{ pt.id }}" {% if pt.id|stringformat:'s' == selected_type %}selected{% endif %}>{{ pt.name }}</option>
+                    {% endif %}
+                {% endfor %}
+            </select>
+        </div>
+    
         <div>
             <label>Search Product:</label>
-            <input type="text" name="search" value="{{ request.GET.search }}" placeholder="Enter product name" />
+            <input type="text" name="search" value="{{ search_query }}" placeholder="Enter product name" />
         </div>
-        <div class="pt-toolbar-actions">
-            <button type="submit">
-                <i class="fa-solid fa-filter mr-1"></i>Apply Filters
-            </button>
-        </div>
+    
     </form>
+
 
     <!-- Error Block -->
     {% if form.errors %}
@@ -244,15 +512,58 @@
     </div>
     {% endif %}
 
-    <!-- Add Product Form -->
+    <!-- Add Product Form (POST FORM) with cascading dropdowns -->
     <div class="products-add-card">
         <h3>
             <i class="fa-solid fa-plus-circle mr-1" style="color:#22c55e;"></i>
             Add New Product
         </h3>
-        <form method="POST" enctype="multipart/form-data" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <form method="POST" enctype="multipart/form-data" id="add-product-form" class="grid grid-cols-1 md:grid-cols-2 gap-6">
             {% csrf_token %}
-            {{ form.as_p }}
+
+            <div>
+                <label for="id_category" class="block font-semibold mb-1 text-[#2563eb]">Category<span class="text-red-600 ml-1">*</span></label>
+                <select id="id_category" name="category" required class="w-full border rounded px-3 py-2">
+                    <option value="">Select Category</option>
+                    {% for cat in categories %}
+                    <option value="{{ cat.id }}">{{ cat.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div>
+                <label for="id_product_category" class="block font-semibold mb-1 text-[#2563eb]">Product Category<span class="text-red-600 ml-1">*</span></label>
+                <select id="id_product_category" name="product_category" required class="w-full border rounded px-3 py-2">
+                    <option value="">Select Product Category</option>
+                </select>
+            </div>
+
+            <div>
+                <label for="id_product_type" class="block font-semibold mb-1 text-[#2563eb]">Product Type<span class="text-red-600 ml-1">*</span></label>
+                <select id="id_product_type" name="product_type" required class="w-full border rounded px-3 py-2">
+                    <option value="">Select Product Type</option>
+                </select>
+            </div>
+
+            <!-- Render other fields from your form (except product_type because we use our cascading select) -->
+            {% for field in form %}
+                {% if field.name != "product_type" %}
+                <div class="md:col-span-2">
+                    <label for="{{ field.id_for_label }}" class="block font-semibold mb-1 text-[#2563eb]">
+                        {{ field.label }}{% if field.field.required %}<span class="text-red-600 ml-1">*</span>{% endif %}
+                    </label>
+                    {{ field|add_class:"w-full border rounded px-3 py-2" }}
+                    {% if field.errors %}
+                    <ul class="text-red-600 text-xs mt-1">
+                        {% for error in field.errors %}
+                        <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
+                </div>
+                {% endif %}
+            {% endfor %}
+
             <div class="md:col-span-2">
                 <button type="submit" style="width:170px;">
                     <i class="fa-solid fa-circle-check mr-1"></i>
@@ -261,6 +572,7 @@
             </div>
         </form>
     </div>
+
 
     <!-- Product Table -->
     <div class="products-table-wrap">
@@ -298,4 +610,48 @@
         </table>
     </div>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const categorySelect = document.getElementById('id_category');
+    const productCategorySelect = document.getElementById('id_product_category');
+    const productTypeSelect = document.getElementById('id_product_type');
+
+    categorySelect.addEventListener('change', function() {
+        const categoryId = this.value;
+        productCategorySelect.innerHTML = '<option value="">Select Product Category</option>';
+        productTypeSelect.innerHTML = '<option value="">Select Product Type</option>';
+        if (!categoryId) return;
+
+        fetch("{% url 'ajax_product_categories' %}?category_id=" + categoryId)
+            .then(response => response.json())
+            .then(data => {
+                data.product_categories.forEach(function(pc) {
+                    let opt = document.createElement('option');
+                    opt.value = pc.id;
+                    opt.textContent = pc.name;
+                    productCategorySelect.appendChild(opt);
+                });
+            });
+    });
+
+    productCategorySelect.addEventListener('change', function() {
+        const productCategoryId = this.value;
+        productTypeSelect.innerHTML = '<option value="">Select Product Type</option>';
+        if (!productCategoryId) return;
+
+        fetch("{% url 'ajax_product_types' %}?product_category_id=" + productCategoryId)
+            .then(response => response.json())
+            .then(data => {
+                data.product_types.forEach(function(pt) {
+                    let opt = document.createElement('option');
+                    opt.value = pt.id;
+                    opt.textContent = pt.name;
+                    productTypeSelect.appendChild(opt);
+                });
+            });
+    });
+});
+</script>
+
 {% endblock %}

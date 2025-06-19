@@ -59,17 +59,11 @@
 
     <div class="bg-gradient-to-r from-blue-100 to-blue-200 py-12">
         <div class="max-w-7xl mx-auto px-8">
-            <h1 class="text-3xl font-bold text-blue-900 mb-2">{{ productname }} </h1>
+            <h1 class="text-3xl font-bold text-blue-900 mb-2">{{ product.name }} </h1>
         </div>
     </div>
 
-    <!-- Fixed Top-Right Go to Wishlist Button -->
-    <!-- <a href="{% url 'wishlist_view' %}"
-       class="fixed top-3 right-3 sm:top-6 sm:right-8 z-50 inline-flex items-center gap-2 font-semibold px-4 sm:px-6 py-2 sm:py-3 rounded-full shadow bg-pink-600 hover:bg-pink-700 text-white text-xs sm:text-base">
-        <i class="fas fa-heart"></i>
-        <span class="hidden xs:inline">Go to Wishlist</span>
-    </a> -->
-
+ 
     <!-- Django Success Message -->
     {% if messages %}
       <div class="fixed top-4 left-1/2 transform -translate-x-1/2 z-50 w-11/12 sm:w-auto">
@@ -99,37 +93,37 @@
         <!-- Product Info -->
         <div>
             <p class="text-xs sm:text-sm uppercase tracking-wide font-medium text-gray-500 mb-2">Hardware</p>
-            <h1 class="text-2xl sm:text-4xl text-[#140e4a] font-light leading-tight mb-4 break-words">{{ product.name }}</h1>
-            <p class="text-gray-700 mb-6 text-sm sm:text-base">{{ product.description }}</p>
+            <h1 class="text-2xl sm:text-4xl text-[#140e4a] font-light leading-tight mb-4 break-words">{{ subproduct.name }}</h1>
+            <p class="text-gray-700 mb-6 text-sm sm:text-base">{{ subproduct.description }}</p>
 
             <!-- Action Buttons -->
             <div class="flex flex-wrap gap-3 sm:gap-4 mt-6">
-                <!-- <a href="#"  class="border border-blue-700 text-blue-700 font-semibold px-4 sm:px-6 py-2 sm:py-3 rounded-full hover:bg-blue-50 text-xs sm:text-base" >
+                <a href="#" class="bg-blue-700 text-white font-semibold px-4 sm:px-6 py-2 sm:py-3 rounded-full shadow hover:bg-blue-800 text-xs sm:text-base">
                     Ordering information
-                </a> -->
-                <a href="{% url 'order_product_online' product.id %}" class="bg-blue-700 text-white font-semibold px-4 sm:px-6 py-2 sm:py-3 rounded-full shadow hover:bg-blue-800 text-xs sm:text-base">
+                </a>
+                <a href="{% url 'order_product_online' product.id %}" class="border border-blue-700 text-blue-700 font-semibold px-4 sm:px-6 py-2 sm:py-3 rounded-full hover:bg-blue-50 text-xs sm:text-base">
                     Contact a representative
                 </a>
-                <!-- {% if product.attachment %}
+                {% if product.attachment %}
                 <a href="{{ product.attachment.url }}" download
                    class="bg-[#140e4a] text-white font-semibold px-4 sm:px-6 py-2 sm:py-3 rounded-full hover:bg-[#1c1b5a] text-xs sm:text-base">
                     <i class="fas fa-file-pdf"></i>
                 </a>
-                {% endif %} -->
+                {% endif %}
 
-                <!-- {% if product.video %}
-                 Watch Video Button (opens modal) 
+                {% if product.video %}
+                <!-- Watch Video Button (opens modal) -->
                 <button id="openVideoModal"
                         type="button"
                         class="border border-[#140e4a] text-[#140e4a] font-semibold px-4 sm:px-6 py-2 sm:py-3 rounded-full hover:bg-gray-100 flex items-center gap-2 text-xs sm:text-base">
                     <i class="fas fa-video"></i>
                     <span>Watch Video</span>
                 </button>
-                {% endif %} -->
+                {% endif %}
 
                 <!-- Wishlist Toggle Button -->
-                <!-- <form method="post" action="{% url 'toggle_wishlist' product.id %}">
-                    {% csrf_token %}
+                <form method="post" action="{% url 'toggle_wishlist' product.id %}">
+                    <!-- {% csrf_token %}
                     <button type="submit"
                     class="rounded-full w-12 h-12 flex items-center justify-center shadow transition
                     {% if wishlisted %}
@@ -139,8 +133,8 @@
                     {% endif %}">
                     <i class="{% if wishlisted %}fas fa-heart{% else %}far fa-heart{% endif %} text-2xl"
                         style="{% if wishlisted %}color: #fff;{% else %}color: #222;{% endif %}"></i>
-                    </button>
-                </form> -->
+                    </button> -->
+                </form>
             </div>
         </div>
     </div>
@@ -164,41 +158,14 @@
     {% endif %}
 
     
-    {% if related_subproducts %}
-    <div class="subproducts-table-wrapper overflow-x-auto bg-white rounded shadow">
-        <h1  class="text-2xl font-bold mb-6">Ordering INFO</h1>
-        <table class="min-w-full divide-y divide-gray-200">
-            <thead class="bg-gray-100">
-                <tr>
-                    <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">Name</th>
-                    <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">Item Number</th>
-                    <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">Description</th>
-                    <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">Unit</th>
-                </tr>
-            </thead>
-            <tbody class="divide-y divide-gray-100">
-                {% for sp in related_subproducts %}
-                <tr class="hover:bg-blue-50 cursor-pointer" onclick="window.location='{% url 'subproduct_detail' sp.pk %}'">
-                    <td class="px-6 py-4">{{ sp.name }}</td>
-                    <td class="px-6 py-4">{{ sp.item_number|default:"N/A" }}</td>
-                    <td class="px-6 py-4">{{ sp.description|default:"N/A" }}</td>
-                    <td class="px-6 py-4">{{ sp.unit|default:"N/A" }}</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
-    {% else %}
-    <p class="text-gray-600">No subproducts found for this product.</p>
-    {% endif %}
 
 
     <!-- Related Products Section -->
-    <div class="bg-gray-50 py-8 sm:py-12">
+    <!-- <div class="bg-gray-50 py-8 sm:py-12">
         <div class="max-w-7xl mx-auto px-2 sm:px-6">
             <h2 class="text-xl sm:text-2xl font-semibold text-[#140e4a] mb-4 sm:mb-6">You Might Also Like</h2>
             <div class="grid grid-cols-1 xs:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5 sm:gap-6">
-                {% for item in related_products %}
+                {% for item in other_subproducts %}
                 <a href="{% url 'product_detail' item.pk %}"
                    class="bg-white rounded shadow hover:shadow-lg transition duration-200 border flex flex-col h-full">
                     {% if item.image %}
@@ -210,11 +177,11 @@
                     </div>
                 </a>
                 {% empty %}
-                <p class="text-gray-500">No related products available.</p>
+                <p class="text-gray-500">No Sub products available.</p>
                 {% endfor %}
             </div>
         </div>
-    </div>
+    </div> -->
 
     <!-- Modal & Magnifier JS -->
     <script>

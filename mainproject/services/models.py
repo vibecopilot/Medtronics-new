@@ -1,6 +1,8 @@
 from django.db import models
 from accounts.models import User
 from products.models import Product
+from products.models import Product, Category, ProductCategory, ProductType
+
 
 
 class RequestType(models.Model):
@@ -14,7 +16,7 @@ class RequestType(models.Model):
         verbose_name_plural = "Request Types"
         ordering = ["name"]
 
-    def __str__(self):
+    def _str_(self):
         return self.name
 
 
@@ -26,6 +28,9 @@ class RequestLog(models.Model):
 
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name="requests")
     product = models.ForeignKey(Product, on_delete=models.SET_NULL, null=True, blank=True, related_name="requests")
+    category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True, blank=True, related_name="requestlogs")
+    product_category = models.ForeignKey(ProductCategory, on_delete=models.SET_NULL, null=True, blank=True, related_name="requestlogs")
+    product_type = models.ForeignKey(ProductType, on_delete=models.SET_NULL, null=True, blank=True, related_name="requestlogs")
     request_type = models.ForeignKey(RequestType, on_delete=models.CASCADE, related_name="logs")
     name = models.CharField(max_length=100, help_text="Person requesting")
     address = models.TextField(help_text="Full address of requester")
@@ -40,5 +45,5 @@ class RequestLog(models.Model):
         verbose_name = "Request Log"
         verbose_name_plural = "Request Logs"
 
-    def __str__(self):
+    def _str_(self):
         return f"{self.request_type.name} - {self.name} ({self.status})"

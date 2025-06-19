@@ -3,7 +3,7 @@ from django.core.exceptions import ValidationError
 from products.models import Product, Category
 import re
 
-# Custom validators
+# --- Custom validators ---
 def validate_name(value):
     if not value.replace(" ", "").isalpha():
         raise ValidationError('Name must contain only alphabets and spaces.')
@@ -22,48 +22,43 @@ def validate_email(value):
     if not re.match(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$', value):
         raise ValidationError('Enter a valid email address.')
 
-class DemoForm(forms.Form):
+# --- AJAX-ready Base Form ---
+class AjaxProductRequestForm(forms.Form):
     name = forms.CharField(max_length=255, validators=[validate_name])
     email = forms.EmailField(validators=[validate_email])
     contact_number = forms.CharField(max_length=15, validators=[validate_contact_number])
-    category = forms.ModelChoiceField(queryset=Category.objects.all())
-    product = forms.ModelChoiceField(queryset=Product.objects.all())
+    category = forms.ModelChoiceField(queryset=Category.objects.all(), required=True)
+    product_category = forms.CharField(required=False)
+    product_type = forms.CharField(required=False)
+    product = forms.CharField(required=True)
     address = forms.CharField(widget=forms.Textarea, validators=[validate_address])
 
     def __init__(self, *args, **kwargs):
         user = kwargs.pop('user', None)
         super().__init__(*args, **kwargs)
-        if user and user.is_authenticated:
+        if user and getattr(user, 'is_authenticated', False):
             self.fields['name'].initial = user.get_full_name() or user.username
             self.fields['email'].initial = user.email
 
-class TrainingForm(forms.Form):
-    name = forms.CharField(max_length=255, validators=[validate_name])
-    email = forms.EmailField(validators=[validate_email])
-    contact_number = forms.CharField(max_length=15, validators=[validate_contact_number])
-    category = forms.ModelChoiceField(queryset=Category.objects.all())
-    product = forms.ModelChoiceField(queryset=Product.objects.all())
-    address = forms.CharField(widget=forms.Textarea, validators=[validate_address])
+    def clean_product(self):
+        product_id = self.cleaned_data.get('product')
+        if not product_id or not str(product_id).isdigit():
+            raise ValidationError("Please select a valid Product.")
+        try:
+            product = Product.objects.get(pk=product_id)
+        except Product.DoesNotExist:
+            raise ValidationError("Selected Product does not exist.")
+        return product
 
-    def __init__(self, *args, **kwargs):
-        user = kwargs.pop('user', None)
-        super().__init__(*args, **kwargs)
-        if user and user.is_authenticated:
-            self.fields['name'].initial = user.get_full_name() or user.username
-            self.fields['email'].initial = user.email
-# Pre-fill name with user's full name
 
-class ProductForm(forms.Form):
-    name = forms.CharField(max_length=255, validators=[validate_name])
-    email = forms.EmailField(validators=[validate_email])
-    contact_number = forms.CharField(max_length=15, validators=[validate_contact_number])
-    category = forms.ModelChoiceField(queryset=Category.objects.all())
-    product = forms.ModelChoiceField(queryset=Product.objects.all())
-    address = forms.CharField(widget=forms.Textarea, validators=[validate_address])
+    # You can add similar clean_product_category and clean_product_type if you want to enforce validation
 
-    def __init__(self, *args, **kwargs):
-        user = kwargs.pop('user', None)
-        super().__init__(*args, **kwargs)
-        if user and user.is_authenticated:
-            self.fields['name'].initial = user.get_full_name() or user.username
-            self.fields['email'].initial = user.email
+# --- Inherit for specific forms ---
+class DemoForm(AjaxProductRequestForm):
+    pass
+
+class TrainingForm(AjaxProductRequestForm):
+    pass
+
+class ProductForm(AjaxProductRequestForm):
+    pass

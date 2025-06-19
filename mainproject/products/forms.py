@@ -3,14 +3,14 @@ from django import forms
 import re
 
 # forms.py
-
 class OrderProductOnlineForm(forms.ModelForm):
     class Meta:
         model = OrderProductOnline
-        fields = ['region', 'name', 'address', 'number']
+        fields = ['region', 'name', 'email', 'address', 'number']   # <-- include 'email'
         widgets = {
             'region': forms.Select(attrs={'class': 'form-input'}),
             'name': forms.TextInput(attrs={'class': 'form-input'}),
+            'email': forms.EmailInput(attrs={'class': 'form-input'}),
             'address': forms.Textarea(attrs={'rows': 3, 'class': 'form-input'}),
             'number': forms.TextInput(attrs={'class': 'form-input', 'placeholder': '10-digit mobile or phone number'}),
         }
@@ -19,15 +19,12 @@ class OrderProductOnlineForm(forms.ModelForm):
         user = kwargs.pop('user', None)
         super().__init__(*args, **kwargs)
         if user and user.is_authenticated:
-            # Set initial values. Adjust as per your User model.
             self.fields['name'].initial = user.get_full_name() or user.username
-            # If you have address/number in user profile, fill them too.
-            if hasattr(user, 'profile'):  # If you use a profile model
+            self.fields['email'].initial = user.email
+            # Optional: autofill address, number from profile
+            if hasattr(user, 'profile'):
                 self.fields['address'].initial = user.profile.address
                 self.fields['number'].initial = user.profile.contact_number
-            # Otherwise, skip or customize as per your setup.
-
-    # (Keep your clean_* methods as-is)
 
     def clean_name(self):
         name = self.cleaned_data.get('name', '').strip()
@@ -49,7 +46,6 @@ class OrderProductOnlineForm(forms.ModelForm):
         number = self.cleaned_data.get('number', '').strip()
         if not number:
             raise forms.ValidationError("Contact number is required.")
-        # Simple validation for Indian mobile/phone numbers (modify if needed)
         if not re.match(r"^\d{10,15}$", number):
             raise forms.ValidationError("Enter a valid contact number (10-15 digits).")
         return number
@@ -59,3 +55,10 @@ class OrderProductOnlineForm(forms.ModelForm):
         if not region:
             raise forms.ValidationError("Please select a region.")
         return region
+
+    def clean_email(self):
+        email = self.cleaned_data.get('email', '').strip()
+        if not email:
+            raise forms.ValidationError("Email is required.")
+        # Django's EmailField already validates format.
+        return email

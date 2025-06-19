@@ -82,5 +82,3 @@ class RegisterForm(UserCreationForm):
             raise ValidationError("Last name must be at least 2 characters.")
         return last_name
 
-
-
