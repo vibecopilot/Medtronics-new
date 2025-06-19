@@ -1,176 +1,145 @@
 {% extends 'admin.html' %}
-
 {% block style %}
 <style>
-    .hero-products-card {
-        background: linear-gradient(120deg, #f8fafc 60%, #e8ebf7 100%);
-        border-radius: 22px;
-        box-shadow: 0 8px 32px #140e4a18;
-        padding: 2.4rem 1.5rem 2.5rem 1.5rem;
-        max-width: 900px;
-        margin: 2.5rem auto;
-        border: 1.5px solid #e3e8f1;
-    }
-    .hero-products-title {
-        font-size: 2rem;
-        font-weight: 900;
+    /* Section Title */
+    .section-title {
+        font-size: 1.6rem;
+        font-weight: 700;
         color: #140e4a;
-        margin-bottom: 2.2rem;
-        letter-spacing: -0.6px;
-        border-bottom: 2.5px solid #c7d2fe;
-        padding-bottom: 1.1rem;
+        margin-bottom: 2rem;
+        text-align: left;
+    }
+    /* Filter */
+    .filter-form {
         display: flex;
         align-items: center;
         gap: 1rem;
-    }
-    .hero-products-title i {
-        font-size: 1.8rem;
-        color: #eab308;
-        margin-right: 0.5rem;
-    }
-    .filter-bar {
-        display: flex; flex-wrap: wrap; gap: 1.5rem; align-items: end;
-        margin-bottom: 2.2rem;
-    }
-    .filter-bar label {
-        font-weight: 700; color: #1a1560; font-size: 1.01rem; margin-bottom: 0.2rem; display: block;
-    }
-    .filter-bar select {
-        border: 1.5px solid #e1e8ff;
-        border-radius: 9px;
-        font-size: 1rem;
-        padding: 0.7rem 1.1rem;
-        min-width: 120px;
-        background: #f7faff;
-        margin-left: 0.3rem;
-        box-shadow: 0 2px 8px #e3e8f13a;
-        transition: border-color 0.14s;
-    }
-    .filter-bar select:focus {
-        border-color: #eab308;
-        background: #fff;
-        outline: none;
-    }
-    .filter-bar button[type="submit"] {
-        background: linear-gradient(90deg, #eab308 85%, #fbbf24 100%);
-        color: #fff;
-        font-weight: 700;
-        padding: 0.75rem 1.7rem;
-        border-radius: 10px;
-        border: none;
-        font-size: 1.05rem;
-        box-shadow: 0 3px 12px #eab30819;
-        transition: background 0.15s, box-shadow 0.18s;
-        margin-top: 0.1rem;
-    }
-    .filter-bar button[type="submit"]:hover {
-        background: linear-gradient(90deg, #fbbf24 65%, #eab308 100%);
-        box-shadow: 0 4px 24px #eab30829;
-    }
-    .classic-table {
-        width: 100%;
+        background: #f6f8fc;
+        padding: 1rem 1.5rem;
         border-radius: 14px;
+        box-shadow: 0 1px 6px #140e4a14;
+        margin-bottom: 2rem;
+        width: max-content;
+    }
+    .filter-form label { font-weight: 600; color: #1a1560; }
+    .filter-form select {
+        border: 1px solid #d5d9e3;
+        padding: 0.55rem 1.1rem;
+        border-radius: 8px;
+        font-size: 1rem;
         background: #fff;
-        overflow: hidden;
+        color: #140e4a;
+        transition: border .2s;
+    }
+    .filter-form select:focus { border-color: #2196f3; outline: none; }
+
+    /* Add Form */
+    .add-form {
+        background: #fff;
+        border-radius: 14px;
+        box-shadow: 0 1px 6px #140e4a12;
+        padding: 2rem 2rem 1.5rem 2rem;
+        margin-bottom: 2rem;
+        max-width: 420px;
+    }
+    .add-form button {
+        margin-top: 0.8rem;
+        background: linear-gradient(90deg, #27ae60 70%, #2196f3 100%);
+        color: #fff;
+        border: none;
+        padding: 0.7rem 1.7rem;
+        border-radius: 9px;
+        font-weight: 600;
+        cursor: pointer;
+        box-shadow: 0 2px 8px #2196f318;
+        transition: background 0.18s;
+    }
+    .add-form button:hover { background: linear-gradient(90deg, #2196f3 60%, #27ae60 100%); }
+
+    /* Table Styling */
+    .nice-table {
+        width: 100%;
         border-collapse: separate;
         border-spacing: 0;
-        box-shadow: 0 2px 12px #140e4a0c;
-        margin-top: 1rem;
-        font-size: 1rem;
-    }
-    .classic-table th, .classic-table td {
-        padding: 1rem 1.2rem;
-        text-align: left;
-        vertical-align: middle;
-    }
-    .classic-table th {
-        background: linear-gradient(90deg, #fef9c3 85%, #fde68a 100%);
-        color: #eab308;
-        font-weight: 800;
-        font-size: 1.05rem;
-        border-bottom: 2.5px solid #fde68a;
-    }
-    .classic-table td {
-        color: #2a2936;
         background: #fff;
-        border-bottom: 1px solid #fef9c3;
-        transition: background 0.15s;
+        border-radius: 14px;
+        box-shadow: 0 1px 10px #140e4a0c;
+        overflow: hidden;
     }
-    .classic-table tr:last-child td {
-        border-bottom: none;
+    .nice-table th, .nice-table td {
+        padding: 1rem 1.1rem;
+        text-align: left;
     }
-    .classic-table tr:hover td {
-        background: #fef9c3;
+    .nice-table th {
+        background: linear-gradient(90deg, #f6f8fc 80%, #e8ebf7 100%);
+        color: #1a1560;
+        font-weight: 700;
+        border-bottom: 2px solid #e1e8ff;
+        font-size: 1.02rem;
     }
-    .no-data-row {
-        text-align: center;
-        color: #c5bfb2;
-        font-style: italic;
+    .nice-table tr:not(:last-child) td {
+        border-bottom: 1px solid #f0f1f5;
     }
-    @media (max-width: 800px) {
-        .hero-products-card { padding: 1rem; }
-        .hero-products-title { font-size: 1.23rem; }
-        .classic-table th, .classic-table td { padding: 0.7rem 0.7rem; }
+    .nice-table td {
+        color: #242949;
+        font-size: 1rem;
+        background: #fff;
     }
-    @media (max-width: 600px) {
-        .filter-bar { flex-direction: column; gap: 1.1rem;}
-        .hero-products-card { margin: 1rem 0.2rem; }
-        .hero-products-title { font-size: 1.09rem;}
+    .nice-table tr:hover td {
+        background: #f3f8ff;
+        transition: background 0.16s;
+    }
+    /* Responsive */
+    @media (max-width: 700px) {
+        .nice-table th, .nice-table td { padding: 0.7rem 0.5rem; }
+        .add-form { padding: 1rem; }
+        .filter-form { padding: 0.7rem 1rem; flex-direction: column; gap: 0.5rem; }
     }
 </style>
+
 {% endblock %}
 
 {% block content %}
-<div class="hero-products-card">
-    <div class="hero-products-title">
-        <i class="fa-solid fa-trophy"></i>
-        Hero Products
-    </div>
+<h2 class="section-title">Manage Product Categories</h2>
 
-    <form method="get" class="filter-bar">
-        <div>
-            <label for="time">Time Range:</label>
-            <select name="time" id="time">
-                <option value="today" {% if selected_time == 'today' %}selected{% endif %}>Today</option>
-                <option value="month" {% if selected_time == 'month' %}selected{% endif %}>This Month</option>
-                <option value="year" {% if selected_time == 'year' %}selected{% endif %}>This Year</option>
-            </select>
-        </div>
-        <div>
-            <label for="metric">Metric:</label>
-            <select name="metric" id="metric">
-                <option value="all" {% if selected_metric == 'all' %}selected{% endif %}>All</option>
-                <option value="searched" {% if selected_metric == 'searched' %}selected{% endif %}>Searched</option>
-                <option value="downloaded" {% if selected_metric == 'downloaded' %}selected{% endif %}>Downloaded</option>
-                <option value="quoted" {% if selected_metric == 'quoted' %}selected{% endif %}>Quoted</option>
-            </select>
-        </div>
-        <button type="submit"><i class="fa-solid fa-filter mr-1"></i> Apply</button>
-    </form>
+<!-- Add Form -->
+<form method="POST" class="add-form mb-6">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Add Product Category</button>
+</form>
 
-    <div class="overflow-x-auto">
-        <table class="classic-table">
-            <thead>
-                <tr>
-                    <th><i class="fa-solid fa-cube mr-1 text-yellow-600"></i> Product Name</th>
-                    <th><i class="fa-solid fa-layer-group mr-1 text-yellow-600"></i> Type</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for product in products %}
-                <tr>
-                    <td>{{ product.name }}</td>
-                    <td>{{ product.product_type.name }}</td>
-                </tr>
-                {% empty %}
-                <tr>
-                    <td colspan="2" class="no-data-row py-6">No data found for selected filters.</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
-</div>
-<!-- Font Awesome CDN for icons -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+<!-- Filter by Category -->
+<form method="get" class="filter-form mb-6">
+    <label for="category" class="mr-2">Filter by Category:</label>
+    <select name="category" id="category" onchange="this.form.submit()">
+        <option value="">All</option>
+        {% for cat in categories %}
+            <option value="{{ cat.id }}" {% if cat.id|stringformat:'s' == selected_category %}selected{% endif %}>
+                {{ cat.name }}
+            </option>
+        {% endfor %}
+    </select>
+</form>
+
+<!-- Table -->
+<table class="nice-table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Category</th>
+            <th>Created At</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for item in items %}
+        <tr>
+            <td>{{ item.name }}</td>
+            <td>{{ item.category.name }}</td>
+            <td>{{ item.created_at|date:"Y-m-d H:i" }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
 {% endblock %}
+

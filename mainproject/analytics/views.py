@@ -29,7 +29,7 @@ def active_vendors_view(request):
     if not check_admin_permission(request):
         return redirect('home')  
     recent_date = now() - timedelta(days=30)
-    vendor_ids = UserActivity.objects.filter(login_date__gte=recent_date, user__role='user').values_list('user', flat=True).distinct()
+    vendor_ids = UserActivity.objects.filter(login_date_gte=recent_date, user_role='user').values_list('user', flat=True).distinct()
     vendors = User.objects.filter(id__in=vendor_ids)
     return render(request, 'analytics/list.html', {'title': 'Active Vendors (Last 30 Days)', 'vendors': vendors})
 
@@ -66,7 +66,7 @@ def wau_view(request):
     if not check_admin_permission(request):
         return redirect('home')
     start_of_week = now() - timedelta(days=now().weekday())
-    vendor_ids = UserActivity.objects.filter(login_date__gte=start_of_week, user__role='user').values_list('user', flat=True).distinct()
+    vendor_ids = UserActivity.objects.filter(login_date_gte=start_of_week, user_role='user').values_list('user', flat=True).distinct()
     vendors = User.objects.filter(id__in=vendor_ids)
     return render(request, 'analytics/list.html', {'title': 'Weekly Active Vendors', 'vendors': vendors})
 
@@ -74,7 +74,7 @@ def mau_view(request):
     if not check_admin_permission(request):
         return redirect('home')
     start_of_month = now().replace(day=1)
-    vendor_ids = UserActivity.objects.filter(login_date__gte=start_of_month, user__role='user').values_list('user', flat=True).distinct()
+    vendor_ids = UserActivity.objects.filter(login_date_gte=start_of_month, user_role='user').values_list('user', flat=True).distinct()
     vendors = User.objects.filter(id__in=vendor_ids)
     return render(request, 'analytics/list.html', {'title': 'Monthly Active Vendors', 'vendors': vendors})
 
@@ -89,7 +89,7 @@ def dormant_vendors_view(request):
 def avg_session_view(request):
     if not check_admin_permission(request):
         return redirect('home')
-    activities = UserActivity.objects.filter(user__role='user', end_time__isnull=False)
+    activities = UserActivity.objects.filter(user_role='user', end_time_isnull=False)
     vendor_data = defaultdict(list)
 
     for act in activities:
@@ -209,7 +209,7 @@ def top_categories_engagement(request):
 
     data = (
         queryset
-        .values('product__product_type__product_category__name')
+        .values('product_product_typeproduct_category_name')
         .annotate(total=Count('id'))
         .order_by('-total')[:10]
     )
@@ -310,7 +310,7 @@ def support_metrics_view(request):
     elif period == 'year':
         logs = RequestLog.objects.filter(date__year=today.year)
     else: 
-        logs = RequestLog.objects.filter(date__year=today.year, date__month=today.month)
+        logs = RequestLog.objects.filter(date_year=today.year, date_month=today.month)
 
     demo_count = logs.filter(request_type__name='Demo').count()
     training_count = logs.filter(request_type__name='Training').count()
@@ -395,76 +395,152 @@ def manage_product_categories(request):
     })
 
 
+
+
 @admin_only
 def manage_product_types(request):
-    selected_pc = request.GET.get('product_category')
-    pcs = ProductCategory.objects.all()
+    categories = Category.objects.all().order_by('name')  # all categories ordered
 
-    queryset = ProductType.objects.all()
+    selected_cat = request.GET.get('category', '')
+    selected_pc = request.GET.get('product_category', '')
+    search = request.GET.get('search', '').strip()
+
+    # Filter Product Categories based on selected category
+    pcs = ProductCategory.objects.all().order_by('name')
+    if selected_cat:
+        pcs = pcs.filter(category_id=selected_cat)
+
+    # Start with all ProductTypes
+    queryset = ProductType.objects.all().order_by('name')
+
+    # Filter ProductTypes by selected ProductCategory
     if selected_pc:
         queryset = queryset.filter(product_category_id=selected_pc)
 
-    form = ProductTypeForm(request.POST or None)
-    if request.method == 'POST' and form.is_valid():
-        form.save()
-        return redirect('manage_product_types')
+    # Apply search filter on ProductType name if search term present
+    if search:
+        queryset = queryset.filter(name__icontains=search)
 
-    return render(request, 'analytics/product_types.html', {
+    form = ProductTypeForm(request.POST or None)
+    if request.method == 'POST':
+        form = ProductTypeForm(request.POST)
+        if form.is_valid():
+            form.save()
+            # Redirect to clear POST data and show updated list
+            return redirect('manage_product_types')
+
+    context = {
         'form': form,
         'items': queryset,
+        'categories': categories,
         'product_categories': pcs,
-        'selected_pc': selected_pc
-    })
+        'selected_cat': selected_cat,
+        'selected_pc': selected_pc,
+        'search': search,
+    }
+    return render(request, 'analytics/product_types.html', context)
 
 
 
 
 @admin_only
 def manage_products(request):
-    selected_type = request.GET.get('product_type')
-    search_query = request.GET.get('search', '')
+    categories = Category.objects.all().order_by('name')
 
-    queryset = Product.objects.all()
+    selected_cat = request.GET.get('category', '')
+    selected_pc = request.GET.get('product_category', '')
+    selected_type = request.GET.get('product_type', '')
+    search_query = request.GET.get('search', '').strip()
 
+    # Get product categories filtered by category if selected
+    product_categories = ProductCategory.objects.all().order_by('name')
+    if selected_cat:
+        product_categories = product_categories.filter(category_id=selected_cat)
+
+    # Get product types filtered by selected product category if any
+    product_types = ProductType.objects.all().order_by('name')
+    if selected_pc:
+        product_types = product_types.filter(product_category_id=selected_pc)
+    elif selected_cat:
+        # if no product category selected but category selected, limit product types to categories of selected category
+        product_types = product_types.filter(product_category__category_id=selected_cat)
+
+    # Start product queryset
+    queryset = Product.objects.all().order_by('name')
+
+    # Filter products
     if selected_type:
         queryset = queryset.filter(product_type_id=selected_type)
+    elif selected_pc:
+        queryset = queryset.filter(product_type__product_category_id=selected_pc)
+    elif selected_cat:
+        queryset = queryset.filter(product_type__product_category__category_id=selected_cat)
+
     if search_query:
         queryset = queryset.filter(name__icontains=search_query)
 
     form = ProductForm(request.POST or None, request.FILES or None)
-    if request.method == 'POST' and form.is_valid():
-        form.save()
-        return redirect('manage_products')
+    if request.method == 'POST':
+        form = ProductForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            return redirect('manage_products')
 
-    product_types = ProductType.objects.all()
-
-    return render(request, 'analytics/products.html', {
+    context = {
         'form': form,
         'items': queryset,
+        'categories': categories,
+        'product_categories': product_categories,
         'product_types': product_types,
-        'selected_type': selected_type
-    })
+        'selected_cat': selected_cat,
+        'selected_pc': selected_pc,
+        'selected_type': selected_type,
+        'search_query': search_query,
+    }
+    return render(request, 'analytics/products.html', context)
 
-@admin_only
+
+
 def manage_subproducts(request):
+    selected_cat = request.GET.get('category')
+    selected_pc = request.GET.get('product_category')
+    selected_type = request.GET.get('product_type')
     selected_product = request.GET.get('product')
+
+    categories = Category.objects.all()
+    product_categories = ProductCategory.objects.all()
+    product_types = ProductType.objects.all()
     products = Product.objects.all()
 
     queryset = Subproduct.objects.all()
+
     if selected_product:
         queryset = queryset.filter(product_id=selected_product)
+    elif selected_type:
+        queryset = queryset.filter(product__product_type_id=selected_type)
+    elif selected_pc:
+        queryset = queryset.filter(product__product_type__product_category_id=selected_pc)
+    elif selected_cat:
+        queryset = queryset.filter(product__product_type__product_category__category_id=selected_cat)
 
     form = SubproductForm(request.POST or None)
-    if request.method == 'POST' and form.is_valid():
+    if request.method == "POST" and form.is_valid():
         form.save()
         return redirect('manage_subproducts')
 
     return render(request, 'analytics/subproducts.html', {
         'form': form,
         'items': queryset,
+        'categories': categories,
+        'product_categories': product_categories,
+        'product_types': product_types,
         'products': products,
-        'selected_product': selected_product
+        'selected_cat': selected_cat,
+        'selected_pc': selected_pc,
+        'selected_type': selected_type,
+        'selected_product': selected_product,
     })
+
 
 
 from django.views.decorators.http import require_POST
@@ -504,3 +580,36 @@ def delete_subproduct(request, pk):
     subproduct = get_object_or_404(Subproduct, pk=pk)
     subproduct.delete()
     return redirect('manage_subproducts')
+
+from django.http import JsonResponse
+from products.models import ProductCategory
+
+def ajax_product_categories(request):
+    category_id = request.GET.get('category_id')
+    if not category_id:
+        return JsonResponse({'product_categories': []})
+    qs = ProductCategory.objects.filter(category_id=category_id)
+    categories = [{'id': c.id, 'name': c.name} for c in qs]
+    return JsonResponse({'product_categories': categories})
+
+
+
+def ajax_product_categories(request):
+    category_id = request.GET.get('category_id')
+    if not category_id:
+        return JsonResponse({'product_categories': []})
+    product_categories = ProductCategory.objects.filter(category_id=category_id).values('id', 'name')
+    return JsonResponse({'product_categories': list(product_categories)})
+
+def ajax_product_types(request):
+    product_category_id = request.GET.get('product_category_id')
+    if not product_category_id:
+        return JsonResponse({'product_types': []})
+    product_types = ProductType.objects.filter(product_category_id=product_category_id).values('id', 'name')
+    return JsonResponse({'product_types': list(product_types)})
+
+
+def ajax_products(request):
+    product_type_id = request.GET.get('product_type_id')
+    products = Product.objects.filter(product_type_id=product_type_id).values('id', 'name')
+    return JsonResponse({'products': list(products)})

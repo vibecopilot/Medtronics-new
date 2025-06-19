@@ -5,14 +5,8 @@
     <title>Product Catalogue</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
-        .hover-expand {
-            transition: all 0.5s ease-in-out;
-        }
-        .hover-expand:hover {
-            width: 100% !important;
-            z-index: 10;
-        }
         .fade-in {
             opacity: 0;
             transition: opacity 0.5s ease-in-out;
@@ -20,61 +14,81 @@
         .group:hover .fade-in {
             opacity: 1;
         }
+        .search-dropdown {
+    max-height: 260px;
+    overflow-y: auto;
+    border-radius: 0 0 0.5rem 0.5rem;
+}
+.search-dropdown-item:hover {
+    background: #f3f4f6;
+}
+
     </style>
 </head>
 <body class="bg-gray-100 font-sans">
 
 <div class="w-full bg-white min-h-screen">
     <!-- Header Banner -->
-    <div class="bg-gradient-to-br from-blue-100 to-blue-200 text-blue-900 px-8 py-12">
-        <h1 class="text-3xl font-bold leading-snug">INFORMATION FOR HEALTHCARE PROFESSIONALS</h1>
+    <div class="bg-gradient-to-br from-blue-100 to-blue-200 text-blue-900 px-4 sm:px-8 py-8 sm:py-12">
+        <h1 class="text-xl sm:text-3xl font-bold leading-snug">
+            INFORMATION FOR HEALTHCARE PROFESSIONALS
+        </h1>
     </div>
     
     <!-- Subheader -->
-    <div class="p-8">
-        <h2 class="text-lg text-blue-900 font-semibold">
+    <div class="p-4 sm:p-8">
+        <h2 class="text-base sm:text-lg text-blue-900 font-semibold">
             INNOVATIONS THAT HELP YOU MEET YOUR PATIENTS' NEEDS
         </h2>
-        <p class="text-lg text-blue-900 font-semibold">Find information about our products below.</p>
+        <p class="text-base sm:text-lg text-blue-900 font-semibold mb-2">
+            Find information about our products below.
+        </p>
             
         <a href="{% url 'home' %}"
-           class="inline-flex items-center gap-2 mt-4 px-5 py-2 rounded-full bg-[#140e4a] text-white font-semibold shadow hover:bg-blue-900 focus:outline-none transition-all duration-200">
+           class="inline-flex items-center gap-2 mt-3 px-4 py-2 rounded-full bg-[#140e4a] text-white font-semibold shadow hover:bg-blue-900 transition-all text-xs sm:text-base">
             <i class="fas fa-arrow-left"></i>
             <span>Back to Home Page</span>
         </a>
                
-        <!-- Sort & Column Info -->
-        <div class="mt-10 mb-4 text-sm flex flex-wrap items-center justify-between gap-4">
-            <div>
-                <span class="text-gray-500 font-medium">SORT:</span>
-                <span class="text-blue-700 font-semibold">CATEGORY (A-Z)</span>
-                <span class="ml-6 text-gray-500 font-medium">COLUMNS:</span>
-                <span class="text-blue-700 font-semibold">STACK</span>
-            </div>
-            <!-- Search Form -->
-            <form method="get" class="flex gap-2">
-                <input type="text" name="search" placeholder="Search products..."
-                    class="border border-gray-300 p-2 rounded-md text-sm w-64"
-                    value="{{ request.GET.search }}">
-                <button type="submit" class="bg-blue-700 text-white px-4 py-2 rounded-md text-sm hover:bg-blue-800">
-                    Search
-                </button> 
-            </form>
-        </div>
+        <!-- Sort & Search Controls -->
+       <!-- Sort & Search Controls -->
+<div class="mt-8 mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between text-sm">
+    <div class="flex flex-wrap gap-4">
+        <span>
+            <span class="text-gray-500 font-medium">SORT:</span>
+            <span class="text-blue-700 font-semibold ml-1">CATEGORY (A-Z)</span>
+        </span>
+        <span>
+            <span class="text-gray-500 font-medium">COLUMNS:</span>
+            <span class="text-blue-700 font-semibold ml-1">STACK</span>
+        </span>
+    </div>
+    <!-- Autocomplete Search Field with dropdown -->
+    <div class="relative w-full sm:w-80">
+        <input type="text" id="search-input" autocomplete="off"
+            placeholder="Search products..." class="border border-gray-300 px-4 py-2 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
+        >
+        <div id="search-dropdown" class="hidden absolute top-full left-0 w-full bg-white border border-t-0 shadow z-10 search-dropdown"></div>
+    </div>
+</div>
+
         
-        <!-- Category & ProductCategory Table Header -->
-        <div class="grid grid-cols-2 text-white font-semibold text-base bg-gradient-to-r from-blue-300 to-blue-500">
+        <!-- Table Header (hidden on xs, visible on sm+) -->
+        <div class="hidden sm:grid grid-cols-2 text-white font-semibold text-base bg-gradient-to-r from-blue-300 to-blue-500">
             <div class="p-3">Category</div>
             <div class="p-3">Products</div>
         </div>
         
-        <!-- Table Content -->
+        <!-- Table Content: Stacks on mobile, grid on desktop -->
+        <div>
         {% for cat in categories %}
-            <div class="grid grid-cols-2 border-b">
-                <div class="p-4 font-bold text-blue-900 border-r border-gray-200 bg-blue-50">
+            <div class="flex flex-col sm:grid sm:grid-cols-2 border-b">
+                <!-- Category Name -->
+                <div class="p-4 font-bold text-blue-900 border-b sm:border-b-0 sm:border-r border-gray-200 bg-blue-50 text-sm sm:text-base">
                     {{ cat.name }}
                 </div>
-                <div class="p-4 space-y-1 bg-white">
+                <!-- Product Categories -->
+                <div class="p-4 space-y-1 bg-white text-sm sm:text-base">
                     {% for prod_cat in cat.product_categories.all %}
                         {% if not request.GET.search or request.GET.search|lower in prod_cat.name|lower %}
                             <a href="{% url 'product_list' prod_cat.pk %}" class="block text-blue-700 hover:underline">
@@ -82,13 +96,64 @@
                             </a>
                         {% endif %}
                     {% empty %}
-                        <span class="text-gray-500 text-sm">No subcategories available.</span>
+                        <span class="text-gray-500 text-xs">No subcategories available.</span>
                     {% endfor %}
                 </div>
             </div>
         {% endfor %}
+        </div>
     </div>
 </div>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const searchInput = document.getElementById('search-input');
+        const dropdown = document.getElementById('search-dropdown');
+        let allProducts = [
+            {% for product in all_products %}
+                {
+                    id: '{{ product.pk }}',
+                    name: '{{ product.name|escapejs }}',
+                    image: '{% if product.image %}{{ product.image }}{% endif %}'
+                },
+            {% endfor %}
+        ];
+    
+        searchInput?.addEventListener('input', function () {
+            const value = this.value.toLowerCase();
+            dropdown.innerHTML = '';
+            if (!value) {
+                dropdown.classList.add('hidden');
+                return;
+            }
+            let matches = allProducts.filter(p => p.name.toLowerCase().includes(value));
+            if (!matches.length) {
+                dropdown.classList.add('hidden');
+                return;
+            }
+            dropdown.classList.remove('hidden');
+            matches.forEach(p => {
+                const item = document.createElement('form');
+                item.method = "POST";
+                item.action = "{% url 'store_searched_product' %}";
+                item.className = "flex items-center px-4 py-2 cursor-pointer search-dropdown-item";
+                item.innerHTML = `
+                    {% csrf_token %}
+                    <input type="hidden" name="product_id" value="${p.id}">
+                    <img src="${p.image}" alt="${p.name}" class="w-8 h-8 rounded object-contain mr-3 bg-white border" onerror="this.style.display='none'">
+                    <button type="submit" class="bg-transparent border-none text-left w-full focus:outline-none truncate">${p.name}</button>
+                `;
+                dropdown.appendChild(item);
+            });
+        });
+        // Hide dropdown on click outside
+        document.addEventListener('click', function(e){
+            if (!searchInput.contains(e.target) && !dropdown.contains(e.target)){
+                dropdown.classList.add('hidden');
+            }
+        });
+    });
+    </script>
+
 
 </body>
 </html>

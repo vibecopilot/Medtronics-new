@@ -22,26 +22,219 @@
     <div class="md:w-1/2 flex items-center justify-center bg-white p-10 md:p-16">
         <form method="POST" class="w-full max-w-2xl">
             {% csrf_token %}
+
+            {% if messages %}
+              <div class="mb-6">
+                {% for message in messages %}
+                  <div class="
+                    px-4 py-3 rounded-lg mb-3 font-semibold
+                    {% if message.tags == 'success' %}
+                      bg-green-50 text-green-800 border-l-4 border-green-500
+                    {% elif message.tags == 'error' %}
+                      bg-red-50 text-red-800 border-l-4 border-red-500
+                    {% elif message.tags == 'warning' %}
+                      bg-yellow-50 text-yellow-900 border-l-4 border-yellow-400
+                    {% else %}
+                      bg-blue-50 text-blue-900 border-l-4 border-blue-500
+                    {% endif %}
+                  ">
+                    {{ message }}
+                  </div>
+                {% endfor %}
+              </div>
+            {% endif %}
+
             <div class="space-y-6">
+
+                <!-- Name Field -->
                 {% for field in form %}
+                  {% if field.name == 'name' or field.name == 'first_name' or field.name == 'full_name' %}
+                  <div class="flex flex-col md:flex-row md:items-start md:gap-4">
+                      <label class="md:w-1/3 block text-sm font-extrabold text-gray-700 mt-2" for="{{ field.id_for_label }}">
+                          {{ field.label }}{% if field.field.required %}<span class="text-red-600 ml-1">*</span>{% endif %}
+                      </label>
+                      <div class="md:w-2/3">
+                          {{ field|add_class:"w-full py-3 px-4 border border-gray-300 rounded-md text-base shadow-sm focus:outline-none focus:ring-2 focus:ring-[#140e4a] transition duration-200" }}
+                          {% if field.help_text %}
+                          <p class="text-xs text-gray-500 mt-1">{{ field.help_text }}</p>
+                          {% endif %}
+                          {% if field.errors %}
+                          <ul class="text-[#140e4a] text-sm mt-1">
+                              {% for error in field.errors %}
+                              <li>{{ error }}</li>
+                              {% endfor %}
+                          </ul>
+                          {% endif %}
+                      </div>
+                  </div>
+                  {% endif %}
+                {% endfor %}
+
+                <!-- Email Field -->
+                {% for field in form %}
+                  {% if field.name == 'email' %}
+                  <div class="flex flex-col md:flex-row md:items-start md:gap-4">
+                      <label class="md:w-1/3 block text-sm font-extrabold text-gray-700 mt-2" for="{{ field.id_for_label }}">
+                          {{ field.label }}{% if field.field.required %}<span class="text-red-600 ml-1">*</span>{% endif %}
+                      </label>
+                      <div class="md:w-2/3">
+                          {{ field|add_class:"w-full py-3 px-4 border border-gray-300 rounded-md text-base shadow-sm focus:outline-none focus:ring-2 focus:ring-[#140e4a] transition duration-200" }}
+                          {% if field.help_text %}
+                          <p class="text-xs text-gray-500 mt-1">{{ field.help_text }}</p>
+                          {% endif %}
+                          {% if field.errors %}
+                          <ul class="text-[#140e4a] text-sm mt-1">
+                              {% for error in field.errors %}
+                              <li>{{ error }}</li>
+                              {% endfor %}
+                          </ul>
+                          {% endif %}
+                      </div>
+                  </div>
+                  {% endif %}
+                {% endfor %}
+
+                <!-- Contact Number Field (Moved Up) -->
+                {% for field in form %}
+                  {% if field.name == 'contact_number' or field.name == 'contact' or field.name == 'phone' or field.name == 'mobile' %}
+                  <div class="flex flex-col md:flex-row md:items-start md:gap-4">
+                      <label class="md:w-1/3 block text-sm font-extrabold text-gray-700 mt-2" for="{{ field.id_for_label }}">
+                          {{ field.label }}{% if field.field.required %}<span class="text-red-600 ml-1">*</span>{% endif %}
+                      </label>
+                      <div class="md:w-2/3">
+                          {{ field|add_class:"w-full py-3 px-4 border border-gray-300 rounded-md text-base shadow-sm focus:outline-none focus:ring-2 focus:ring-[#140e4a] transition duration-200" }}
+                          {% if field.help_text %}
+                          <p class="text-xs text-gray-500 mt-1">{{ field.help_text }}</p>
+                          {% endif %}
+                          {% if field.errors %}
+                          <ul class="text-[#140e4a] text-sm mt-1">
+                              {% for error in field.errors %}
+                              <li>{{ error }}</li>
+                              {% endfor %}
+                          </ul>
+                          {% endif %}
+                      </div>
+                  </div>
+                  {% endif %}
+                {% endfor %}
+
+                <!-- Address Field (Small by Default) -->
+                {% for field in form %}
+                  {% if field.name == 'address' %}
+                  <div class="flex flex-col md:flex-row md:items-start md:gap-4">
+                      <label class="md:w-1/3 block text-sm font-extrabold text-gray-700 mt-1" for="{{ field.id_for_label }}">
+                          {{ field.label }}{% if field.field.required %}<span class="text-red-600 ml-1">*</span>{% endif %}
+                      </label>
+                      <div class="md:w-2/3">
+                          {{ field|add_class:"w-full py-1.5 px-2.5 border border-gray-300 rounded text-xs shadow-sm focus:outline-none focus:ring-1 focus:ring-[#140e4a] transition duration-200 h-8" }}
+                          {% if field.help_text %}
+                          <p class="text-xs text-gray-500 mt-1">{{ field.help_text }}</p>
+                          {% endif %}
+                          {% if field.errors %}
+                          <ul class="text-[#140e4a] text-xs mt-1">
+                              {% for error in field.errors %}
+                              <li>{{ error }}</li>
+                              {% endfor %}
+                          </ul>
+                          {% endif %}
+                      </div>
+                  </div>
+                  {% endif %}
+                {% endfor %}
+
+                <!-- Category Dropdown -->
                 <div class="flex flex-col md:flex-row md:items-start md:gap-4">
-                    <label class="md:w-1/3 block text-sm font-semibold text-gray-700 mt-2" for="{{ field.id_for_label }}">
-                        {{ field.label }}{% if field.field.required %}<span class="text-[#140e4a] ml-1">*</span>{% endif %}
-                    </label>
+                    <label for="category" class="md:w-1/3 block text-sm font-extrabold text-gray-700 mt-2">Category<span class="text-red-600 ml-1">*</span></label>
                     <div class="md:w-2/3">
-                        {{ field|add_class:"w-full py-3 px-4 border border-gray-300 rounded-md text-base shadow-sm focus:outline-none focus:ring-2 focus:ring-[#140e4a] transition duration-200" }}
-                        {% if field.help_text %}
-                        <p class="text-xs text-gray-500 mt-1">{{ field.help_text }}</p>
-                        {% endif %}
-                        {% if field.errors %}
-                        <ul class="text-[#140e4a] text-sm mt-1">
-                            {% for error in field.errors %}
-                            <li>{{ error }}</li>
+                        <select id="category" name="category" class="w-full py-3 px-4 border border-gray-300 rounded-md text-base shadow-sm focus:outline-none focus:ring-2 focus:ring-[#140e4a] transition duration-200">
+                            <option value="">Select Category</option>
+                            {% for cat in categories %}
+                            <option value="{{ cat.id }}">{{ cat.name }}</option>
                             {% endfor %}
-                        </ul>
+                        </select>
+                        {% if form.category.errors %}
+                          <ul class="text-[#140e4a] text-sm mt-1">
+                            {% for error in form.category.errors %}
+                              <li>{{ error }}</li>
+                            {% endfor %}
+                          </ul>
                         {% endif %}
                     </div>
                 </div>
+
+                <!-- Product Category Dropdown -->
+                <div class="flex flex-col md:flex-row md:items-start md:gap-4">
+                    <label for="product_category" class="md:w-1/3 block text-sm font-extrabold text-gray-700 mt-2">Product Category<span class="text-red-600 ml-1">*</span></label>
+                    <div class="md:w-2/3">
+                        <select id="product_category" name="product_category" class="w-full py-3 px-4 border border-gray-300 rounded-md text-base shadow-sm focus:outline-none focus:ring-2 focus:ring-[#140e4a] transition duration-200">
+                            <option value="">Select Product Category</option>
+                        </select>
+                        {% if form.product_category.errors %}
+                          <ul class="text-[#140e4a] text-sm mt-1">
+                            {% for error in form.product_category.errors %}
+                              <li>{{ error }}</li>
+                            {% endfor %}
+                          </ul>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- Product Type Dropdown -->
+                <div class="flex flex-col md:flex-row md:items-start md:gap-4">
+                    <label for="product_type" class="md:w-1/3 block text-sm font-extrabold text-gray-700 mt-2">Product Type<span class="text-red-600 ml-1">*</span></label>
+                    <div class="md:w-2/3">
+                        <select id="product_type" name="product_type" class="w-full py-3 px-4 border border-gray-300 rounded-md text-base shadow-sm focus:outline-none focus:ring-2 focus:ring-[#140e4a] transition duration-200">
+                            <option value="">Select Product Type</option>
+                        </select>
+                        {% if form.product_type.errors %}
+                          <ul class="text-[#140e4a] text-sm mt-1">
+                            {% for error in form.product_type.errors %}
+                              <li>{{ error }}</li>
+                            {% endfor %}
+                          </ul>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- Product Dropdown -->
+                <div class="flex flex-col md:flex-row md:items-start md:gap-4">
+                    <label for="product" class="md:w-1/3 block text-sm font-extrabold text-gray-700 mt-2">Product<span class="text-red-600 ml-1">*</span></label>
+                    <div class="md:w-2/3">
+                        <select id="product" name="product" class="w-full py-3 px-4 border border-gray-300 rounded-md text-base shadow-sm focus:outline-none focus:ring-2 focus:ring-[#140e4a] transition duration-200">
+                            <option value="">Select Product</option>
+                        </select>
+                        {% if form.product.errors %}
+                          <ul class="text-[#140e4a] text-sm mt-1">
+                            {% for error in form.product.errors %}
+                              <li>{{ error }}</li>
+                            {% endfor %}
+                          </ul>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- Render remaining Django Form fields (excluding the ones already rendered) -->
+                {% for field in form %}
+                  {% if field.name not in 'category,product_category,product_type,product,name,first_name,full_name,email,contact,contact_number,phone,mobile,address' %}
+                  <div class="flex flex-col md:flex-row md:items-start md:gap-4">
+                      <label class="md:w-1/3 block text-sm font-extrabold text-gray-700 mt-2" for="{{ field.id_for_label }}">
+                          {{ field.label }}{% if field.field.required %}<span class="text-red-600 ml-1">*</span>{% endif %}
+                      </label>
+                      <div class="md:w-2/3">
+                          {{ field|add_class:"w-full py-3 px-4 border border-gray-300 rounded-md text-base shadow-sm focus:outline-none focus:ring-2 focus:ring-[#140e4a] transition duration-200" }}
+                          {% if field.help_text %}
+                          <p class="text-xs text-gray-500 mt-1">{{ field.help_text }}</p>
+                          {% endif %}
+                          {% if field.errors %}
+                          <ul class="text-[#140e4a] text-sm mt-1">
+                              {% for error in field.errors %}
+                              <li>{{ error }}</li>
+                              {% endfor %}
+                          </ul>
+                          {% endif %}
+                      </div>
+                  </div>
+                  {% endif %}
                 {% endfor %}
 
                 {% if form.non_field_errors %}
@@ -59,4 +252,68 @@
         </form>
     </div>
 </div>
+
+<!-- ========== AJAX Script for Cascading Dropdowns ========== -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const categorySelect = document.getElementById('category');
+    const productCategorySelect = document.getElementById('product_category');
+    const productTypeSelect = document.getElementById('product_type');
+    const productSelect = document.getElementById('product');
+
+    categorySelect.addEventListener('change', function() {
+        const categoryId = this.value;
+        productCategorySelect.innerHTML = '<option value="">Select Product Category</option>';
+        productTypeSelect.innerHTML = '<option value="">Select Product Type</option>';
+        productSelect.innerHTML = '<option value="">Select Product</option>';
+        if (!categoryId) return;
+
+        fetch("{% url 'ajax_product_categories' %}?category_id=" + categoryId)
+            .then(response => response.json())
+            .then(data => {
+                data.product_categories.forEach(function(pc) {
+                    let opt = document.createElement('option');
+                    opt.value = pc.id;
+                    opt.textContent = pc.name;
+                    productCategorySelect.appendChild(opt);
+                });
+            });
+    });
+
+    productCategorySelect.addEventListener('change', function() {
+        const productCategoryId = this.value;
+        productTypeSelect.innerHTML = '<option value="">Select Product Type</option>';
+        productSelect.innerHTML = '<option value="">Select Product</option>';
+        if (!productCategoryId) return;
+
+        fetch("{% url 'ajax_product_types' %}?product_category_id=" + productCategoryId)
+            .then(response => response.json())
+            .then(data => {
+                data.product_types.forEach(function(pt) {
+                    let opt = document.createElement('option');
+                    opt.value = pt.id;
+                    opt.textContent = pt.name;
+                    productTypeSelect.appendChild(opt);
+                });
+            });
+    });
+
+    productTypeSelect.addEventListener('change', function() {
+        const productTypeId = this.value;
+        productSelect.innerHTML = '<option value="">Select Product</option>';
+        if (!productTypeId) return;
+
+        fetch("{% url 'ajax_products' %}?product_type_id=" + productTypeId)
+            .then(response => response.json())
+            .then(data => {
+                data.products.forEach(function(prod) {
+                    let opt = document.createElement('option');
+                    opt.value = prod.id;
+                    opt.textContent = prod.name;
+                    productSelect.appendChild(opt);
+                });
+            });
+    });
+});
+</script>
 {% endblock %}

@@ -28,13 +28,15 @@ def send_login_email(user):
         fail_silently=True,
     )
 
-
 def login_view(request):
     form = LoginForm(request, data=request.POST or None)
 
     if request.method == "POST":
         if form.is_valid():
             user = form.get_user()
+            if user.role == "user":
+                messages.error(request, 'N "Access denied: You do not have permission to log in here.')
+                return redirect('home')
             login(request, user)
             now = timezone.now()
             activity = UserActivity.objects.create(
@@ -134,6 +136,7 @@ def register_view(request):
             else:
                 return redirect('login')
         else:
+            messages.error(request,form.errors)
             messages.error(request, "Please correct the errors below.")
     
     return render(request, 'accounts/register.html', {'form': form})

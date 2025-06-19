@@ -8,15 +8,16 @@ https://docs.djangoproject.com/en/5.1/topics/settings/
 
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
+
 """
 
 from pathlib import Path
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'   # or os.path.join(BASE_DIR, 'media')
 
 
-# Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
@@ -48,6 +49,14 @@ AUTH_USER_MODEL = 'accounts.User'
 
 SESSION_COOKIE_AGE = 1800 
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+# settings.py
+
+STATIC_URL = '/static/'
+
+# If your static files are inside your project (e.g. 'mainproject/static/')
+STATICFILES_DIRS = [
+    BASE_DIR / "static",  # or wherever your static folder is
+]
 
 
 MIDDLEWARE = [

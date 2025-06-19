@@ -1,6 +1,8 @@
 {% extends 'admin.html' %}
+{% load widget_tweaks %}
 
 {% block style %}
+{{ block.super }}
 <style>
     .pt-admin-main {
         background: linear-gradient(133deg, #f6f8fa 0%, #ecf3fb 100%);
@@ -194,15 +196,89 @@
         .pt-table-wrap { padding: 0 0 1.2rem 0; }
     }
 </style>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 {% endblock %}
 
 {% block content %}
+
+
+
 <div class="pt-admin-main">
+    <div class="pt-add-card">
+        <h3><i class="fa-solid fa-plus-circle mr-1" style="color:#22c55e;"></i>Add New Product Type</h3>
+        <form method="POST" class="grid grid-cols-1 md:grid-cols-2 gap-6" id="add-product-type-form">
+            {% csrf_token %}
+            <!-- Category Dropdown -->
+            <div>
+                <label for="id_category" class="block font-semibold mb-1 text-[#1740b0]">
+                    Category<span class="text-red-600 ml-1">*</span>
+                </label>
+                <select id="id_category" name="category" class="w-full border rounded px-3 py-2">
+                    <option value="">Select Category</option>
+                    {% for cat in categories %}
+                        <option value="{{ cat.id }}"{% if form.category.value|stringformat:'s' == cat.id|stringformat:'s' %} selected{% endif %}>{{ cat.name }}</option>
+                    {% endfor %}
+                </select>
+                {% if form.category.errors %}
+                <ul class="text-red-600 text-xs mt-1">
+                    {% for error in form.category.errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+            </div>
+            <!-- Product Category Dropdown -->
+            <div>
+                <label for="id_product_category" class="block font-semibold mb-1 text-[#1740b0]">
+                    Product Category<span class="text-red-600 ml-1">*</span>
+                </label>
+                <select id="id_product_category" name="product_category" class="w-full border rounded px-3 py-2">
+                    <option value="">Select Product Category</option>
+                    {% if form.category.value %}
+                        {% for pc in product_categories %}
+                            {% if pc.category_id|stringformat:'s' == form.category.value|stringformat:'s' %}
+                                <option value="{{ pc.id }}"{% if form.product_category.value|stringformat:'s' == pc.id|stringformat:'s' %} selected{% endif %}>{{ pc.name }}</option>
+                            {% endif %}
+                        {% endfor %}
+                    {% endif %}
+                </select>
+                {% if form.product_category.errors %}
+                <ul class="text-red-600 text-xs mt-1">
+                    {% for error in form.product_category.errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+            </div>
+            <!-- Name Field -->
+            <div class="md:col-span-2">
+                <label for="id_name" class="block font-semibold mb-1 text-[#1740b0]">
+                    Product Type Name<span class="text-red-600 ml-1">*</span>
+                </label>
+                {{ form.name|add_class:"w-full border rounded px-3 py-2" }}
+                {% if form.name.errors %}
+                <ul class="text-red-600 text-xs mt-1">
+                    {% for error in form.name.errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+            </div>
+            <div class="md:col-span-2">
+                <button type="submit" style="width:170px;">
+                    <i class="fa-solid fa-circle-check mr-1"></i>
+                    Add Product Type
+                </button>
+            </div>
+        </form>
+    </div>
+
+
+
     <div class="pt-admin-header">
         <i class="fa-solid fa-cubes"></i>
         <h2>Manage Product Types</h2>
     </div>
+
 
     <form method="get" class="pt-admin-toolbar">
         <div>
@@ -240,20 +316,7 @@
     </div>
     {% endif %}
 
-    <div class="pt-add-card">
-        <h3><i class="fa-solid fa-plus-circle mr-1" style="color:#22c55e;"></i>Add New Product Type</h3>
-        <form method="POST" class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {% csrf_token %}
-            {{ form.as_p }}
-            <div class="md:col-span-2">
-                <button type="submit" style="width:170px;">
-                    <i class="fa-solid fa-circle-check mr-1"></i>
-                    Add Product Type
-                </button>
-            </div>
-        </form>
-    </div>
-
+    
     <div class="pt-table-wrap">
         <table class="pt-admin-table">
             <thead>
@@ -289,4 +352,47 @@
         </table>
     </div>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const categorySelect = document.getElementById('id_category');
+    const productCategorySelect = document.getElementById('id_product_category');
+    const initialCategory = categorySelect.value;
+    const selectedProductCategory = "{{ form.product_category.value|default:'' }}";
+
+    categorySelect.addEventListener('change', function() {
+        const categoryId = this.value;
+        productCategorySelect.innerHTML = '<option value="">Select Product Category</option>';
+        if (!categoryId) return;
+        fetch("{% url 'ajax_product_categories' %}?category_id=" + categoryId)
+            .then(response => response.json())
+            .then(data => {
+                data.product_categories.forEach(function(pc) {
+                    let opt = document.createElement('option');
+                    opt.value = pc.id;
+                    opt.textContent = pc.name;
+                    productCategorySelect.appendChild(opt);
+                });
+            });
+    });
+
+    // On page load, if a category is already selected, trigger the change to populate Product Categories (for edit forms)
+    if(initialCategory) {
+        fetch("{% url 'ajax_product_categories' %}?category_id=" + initialCategory)
+            .then(response => response.json())
+            .then(data => {
+                productCategorySelect.innerHTML = '<option value="">Select Product Category</option>';
+                data.product_categories.forEach(function(pc) {
+                    let opt = document.createElement('option');
+                    opt.value = pc.id;
+                    opt.textContent = pc.name;
+                    if (pc.id.toString() === selectedProductCategory) {
+                        opt.selected = true;
+                    }
+                    productCategorySelect.appendChild(opt);
+                });
+            });
+    }
+});
+</script>
 {% endblock %}

@@ -7,6 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Font Awesome for icons -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <style>
         .fade-modal {
             opacity: 0;
@@ -16,6 +17,41 @@
         .fade-modal.show {
             opacity: 1;
             pointer-events: auto;
+        }
+        .subproducts-table-wrapper {
+            width: 60%;
+            padding-left: 2rem; 
+            padding-left: 12%;
+            box-sizing: border-box;
+        }
+
+        .img-magnifier-container {
+            position: relative;
+            cursor: crosshair;
+        }
+        .img-magnifier-lens {
+            position: absolute;
+            border: 3px solid #222;
+            border-radius: 50%;
+            width: 120px;
+            height: 120px;
+            cursor: none;
+            display: none;
+            box-shadow: 0 4px 20px rgba(225, 29, 72, 0.25);
+            z-index: 10;
+            background-repeat: no-repeat;
+            background-color: rgba(255,255,255,0.07);
+            pointer-events: none;
+            transition: opacity 0.22s cubic-bezier(.4,0,.2,1);
+        }
+        .img-magnifier-container:hover .img-magnifier-lens {
+            opacity: 1;
+        }
+        #productZoomImg {
+            display: block;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
         }
     </style>
 </head>
@@ -28,11 +64,11 @@
     </div>
 
     <!-- Fixed Top-Right Go to Wishlist Button -->
-    <a href="{% url 'wishlist_view' %}"
+    <!-- <a href="{% url 'wishlist_view' %}"
        class="fixed top-3 right-3 sm:top-6 sm:right-8 z-50 inline-flex items-center gap-2 font-semibold px-4 sm:px-6 py-2 sm:py-3 rounded-full shadow bg-pink-600 hover:bg-pink-700 text-white text-xs sm:text-base">
         <i class="fas fa-heart"></i>
         <span class="hidden xs:inline">Go to Wishlist</span>
-    </a>
+    </a> -->
 
     <!-- Django Success Message -->
     {% if messages %}
@@ -47,11 +83,16 @@
 
     <!-- Product Detail Section -->
     <div class="max-w-7xl mx-auto py-8 px-2 sm:px-6 grid grid-cols-1 md:grid-cols-2 items-center gap-8 sm:gap-10">
-        <!-- Product Image -->
+        <!-- Product Image with Pan & Zoom -->
         <div class="mb-6 md:mb-0 flex justify-center items-center">
             {% if product.image %}
-            <img src="{{ product.image.url }}" alt="{{ product.name }}"
-                 class="w-full max-w-xs sm:max-w-md object-contain mx-auto rounded shadow-md border h-48 sm:h-80 bg-gray-50" />
+            <div class="img-magnifier-container w-full max-w-xs sm:max-w-md h-48 sm:h-80 mx-auto rounded shadow-md border bg-gray-50 flex items-center justify-center relative overflow-hidden">
+                <img src="{{ product.image.url }}" alt="{{ product.name }}"
+                     id="productZoomImg"
+                     class="w-full h-full object-contain"
+                     style="max-width:100%; max-height:100%;" />
+                <div id="magnifierLens" class="img-magnifier-lens"></div>
+            </div>
             {% endif %}
         </div>
 
@@ -63,49 +104,43 @@
 
             <!-- Action Buttons -->
             <div class="flex flex-wrap gap-3 sm:gap-4 mt-6">
-                <a href="{% url 'order_product_online' product.id %}" class="bg-blue-700 text-white font-semibold px-4 sm:px-6 py-2 sm:py-3 rounded-full shadow hover:bg-blue-800 text-xs sm:text-base">
+                <!-- <a href="#"  class="border border-blue-700 text-blue-700 font-semibold px-4 sm:px-6 py-2 sm:py-3 rounded-full hover:bg-blue-50 text-xs sm:text-base" >
                     Ordering information
-                </a>
-                <a href="#" class="border border-blue-700 text-blue-700 font-semibold px-4 sm:px-6 py-2 sm:py-3 rounded-full hover:bg-blue-50 text-xs sm:text-base">
+                </a> -->
+                <a href="{% url 'order_product_online' product.id %}" class="bg-blue-700 text-white font-semibold px-4 sm:px-6 py-2 sm:py-3 rounded-full shadow hover:bg-blue-800 text-xs sm:text-base">
                     Contact a representative
                 </a>
-                {% if product.attachment %}
+                <!-- {% if product.attachment %}
                 <a href="{{ product.attachment.url }}" download
                    class="bg-[#140e4a] text-white font-semibold px-4 sm:px-6 py-2 sm:py-3 rounded-full hover:bg-[#1c1b5a] text-xs sm:text-base">
                     <i class="fas fa-file-pdf"></i>
                 </a>
-                {% endif %}
+                {% endif %} -->
 
-                {% if product.video %}
-                <!-- Watch Video Button (opens modal) -->
+                <!-- {% if product.video %}
+                 Watch Video Button (opens modal) 
                 <button id="openVideoModal"
                         type="button"
                         class="border border-[#140e4a] text-[#140e4a] font-semibold px-4 sm:px-6 py-2 sm:py-3 rounded-full hover:bg-gray-100 flex items-center gap-2 text-xs sm:text-base">
                     <i class="fas fa-video"></i>
                     <span>Watch Video</span>
                 </button>
-                {% endif %}
+                {% endif %} -->
 
-                <!-- Add/Remove Wishlist Button -->
-                <form method="post" action="{% url 'toggle_wishlist' product.id %}">
-                  {% csrf_token %}
-                  <button type="submit"
-                    class="font-semibold px-4 sm:px-6 py-2 sm:py-3 rounded-full shadow flex items-center space-x-2 text-xs sm:text-base
-                      {% if wishlisted %}
-                        bg-red-600 hover:bg-red-700 text-white
-                      {% else %}
-                        bg-green-600 hover:bg-green-700 text-white
-                      {% endif %}">
-                    <i class="{% if wishlisted %}fas fa-heart{% else %}far fa-heart{% endif %}"></i>
-                    <span>
-                      {% if wishlisted %}
-                        Remove from Wishlist
-                      {% else %}
-                        Add to Wishlist
-                      {% endif %}
-                    </span>
-                  </button>
-                </form>
+                <!-- Wishlist Toggle Button -->
+                <!-- <form method="post" action="{% url 'toggle_wishlist' product.id %}">
+                    {% csrf_token %}
+                    <button type="submit"
+                    class="rounded-full w-12 h-12 flex items-center justify-center shadow transition
+                    {% if wishlisted %}
+                        bg-red-600 hover:bg-red-700
+                    {% else %}
+                        bg-white hover:bg-gray-100 border border-gray-300
+                    {% endif %}">
+                    <i class="{% if wishlisted %}fas fa-heart{% else %}far fa-heart{% endif %} text-2xl"
+                        style="{% if wishlisted %}color: #fff;{% else %}color: #222;{% endif %}"></i>
+                    </button>
+                </form> -->
             </div>
         </div>
     </div>
@@ -127,6 +162,36 @@
         </div>
     </div>
     {% endif %}
+
+    
+    {% if related_subproducts %}
+    <div class="subproducts-table-wrapper overflow-x-auto bg-white rounded shadow">
+        <h1  class="text-2xl font-bold mb-6">Ordering INFO</h1>
+        <table class="min-w-full divide-y divide-gray-200">
+            <thead class="bg-gray-100">
+                <tr>
+                    <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">Name</th>
+                    <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">Item Number</th>
+                    <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">Description</th>
+                    <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">Unit</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-100">
+                {% for sp in related_subproducts %}
+                <tr class="hover:bg-blue-50 cursor-pointer" onclick="window.location='{% url 'subproduct_detail' sp.pk %}'">
+                    <td class="px-6 py-4">{{ sp.name }}</td>
+                    <td class="px-6 py-4">{{ sp.item_number|default:"N/A" }}</td>
+                    <td class="px-6 py-4">{{ sp.description|default:"N/A" }}</td>
+                    <td class="px-6 py-4">{{ sp.unit|default:"N/A" }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <p class="text-gray-600">No subproducts found for this product.</p>
+    {% endif %}
+
 
     <!-- Related Products Section -->
     <div class="bg-gray-50 py-8 sm:py-12">
@@ -151,16 +216,16 @@
         </div>
     </div>
 
-    <!-- Modal Fade-in/out JS -->
+    <!-- Modal & Magnifier JS -->
     <script>
     document.addEventListener("DOMContentLoaded", function () {
+        // Video modal functionality
         const openBtn = document.getElementById("openVideoModal");
         const modal = document.getElementById("videoModal");
         const closeBtn = document.getElementById("closeVideoModal");
-
-        // Hide modal by default
+        
         if (modal) modal.classList.remove('show');
-
+        
         if (openBtn && modal && closeBtn) {
             openBtn.addEventListener("click", () => {
                 modal.classList.add("show");
@@ -169,10 +234,12 @@
                     if (vid) vid.play();
                 }, 100);
             });
+            
             closeBtn.addEventListener("click", () => {
                 modal.classList.remove("show");
                 setTimeout(() => { modal.querySelector("video").pause(); }, 350);
             });
+            
             modal.addEventListener("click", function (e) {
                 if (e.target === modal) {
                     modal.classList.remove("show");
@@ -180,6 +247,73 @@
                 }
             });
         }
+
+        // Magnifier glass logic
+        const img = document.getElementById('productZoomImg');
+        const lens = document.getElementById('magnifierLens');
+        const container = document.querySelector('.img-magnifier-container');
+        if (!img || !lens || !container) return;
+
+        const zoom = 2.5;
+        let isReady = false;
+
+        function initMagnifier() {
+            if (img.complete && img.naturalWidth > 0) {
+                lens.style.backgroundImage = `url('${img.src}')`;
+                // Use actual image natural size for best result
+                lens.style.backgroundSize = `${img.naturalWidth * zoom / (img.offsetWidth / img.width)}px ${img.naturalHeight * zoom / (img.offsetHeight / img.height)}px`;
+                isReady = true;
+            }
+        }
+        img.addEventListener('load', initMagnifier);
+        if (img.complete) initMagnifier();
+
+        function moveLens(e) {
+            if (!isReady) return;
+            e.preventDefault();
+            const rect = img.getBoundingClientRect();
+            let x = e.clientX - rect.left;
+            let y = e.clientY - rect.top;
+
+            const lensWidth = lens.offsetWidth;
+            const lensHeight = lens.offsetHeight;
+            const imgWidth = img.offsetWidth;
+            const imgHeight = img.offsetHeight;
+
+            // Boundaries
+            x = Math.max(lensWidth / 2, Math.min(x, imgWidth - lensWidth / 2));
+            y = Math.max(lensHeight / 2, Math.min(y, imgHeight - lensHeight / 2));
+
+            // Position lens
+            lens.style.left = (x - lensWidth / 2) + "px";
+            lens.style.top = (y - lensHeight / 2) + "px";
+
+            // Calculate ratio for true image to avoid pixelation
+            const scaleX = img.naturalWidth / imgWidth;
+            const scaleY = img.naturalHeight / imgHeight;
+
+            // Magnified background position
+            const bgX = -((x * scaleX * zoom) - lensWidth / 2);
+            const bgY = -((y * scaleY * zoom) - lensHeight / 2);
+
+            lens.style.backgroundPosition = `${bgX}px ${bgY}px`;
+        }
+
+        container.addEventListener('mouseenter', function() {
+            if (isReady) {
+                lens.style.display = 'block';
+                lens.style.opacity = '1';
+            }
+        });
+        container.addEventListener('mousemove', moveLens);
+        container.addEventListener('mouseleave', function() {
+            lens.style.display = 'none';
+            lens.style.opacity = '0';
+        });
+
+        window.addEventListener('resize', function() {
+            if (isReady) setTimeout(initMagnifier, 100);
+        });
     });
     </script>
 </body>

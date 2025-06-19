@@ -8,7 +8,7 @@ if defined _OLD_CODEPAGE (
     "%SystemRoot%\System32\chcp.com" 65001 > nul
 )
 
-set VIRTUAL_ENV=C:\Users\91810\OneDrive\Desktop\MED-Finalize-Ui\Medtronic\env
+set VIRTUAL_ENV=D:\final-med-v\Medtronic 1906\Medtronics-new\env
 
 if not defined PROMPT set PROMPT=$P$G
 

@@ -1,230 +1,465 @@
 {% extends 'admin.html' %}
+{% load widget_tweaks %}
 
 {% block style %}
 <style>
-    .support-metrics-card {
-        background: linear-gradient(120deg, #f8fafc 70%, #e0f7fa 100%);
-        border-radius: 24px;
-        box-shadow: 0 10px 38px #140e4a14;
-        padding: 2.5rem 1.6rem 2.5rem 1.6rem;
-        max-width: 950px;
-        margin: 2.5rem auto;
-        border: 1.5px solid #e3e8f1;
-    }
-    .support-metrics-title {
-        font-size: 2rem;
-        font-weight: 900;
-        color: #140e4a;
-        margin-bottom: 2.1rem;
-        letter-spacing: -0.5px;
-        border-bottom: 2.5px solid #0ea5e9;
-        padding-bottom: 1rem;
-        display: flex;
-        align-items: center;
-        gap: 0.7rem;
-    }
-    .support-metrics-title i {
-        font-size: 1.7rem;
-        color: #0ea5e9;
-        margin-right: 0.4rem;
-    }
-    .support-metrics-filter {
-        display: flex;
-        gap: 1.2rem;
-        align-items: flex-end;
-        margin-bottom: 2.3rem;
-        flex-wrap: wrap;
-    }
-    .support-metrics-filter label {
-        font-weight: 700;
-        color: #1740b0;
-        font-size: 1rem;
-    }
-    .support-metrics-filter select {
-        border: 1.5px solid #e1e8ff;
-        border-radius: 9px;
-        font-size: 1rem;
-        padding: 0.7rem 1.1rem;
-        min-width: 120px;
-        background: #f7faff;
-        margin-left: 0.3rem;
-        box-shadow: 0 2px 8px #e3e8f13a;
-        transition: border-color 0.13s;
-    }
-    .support-metrics-filter select:focus {
-        border-color: #0ea5e9;
-        background: #fff;
-        outline: none;
-    }
-    .metrics-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
-        gap: 1.6rem;
-        margin-bottom: 2.1rem;
-    }
-    .metrics-item {
-        background: #fff;
-        border-radius: 16px;
-        box-shadow: 0 3px 12px #140e4a12;
-        padding: 2.1rem 1.4rem 1.5rem 1.4rem;
-        text-align: center;
-        border: 1.5px solid #e3e8f1;
-        transition: transform 0.13s, box-shadow 0.17s;
-        position: relative;
-    }
-    .metrics-item:hover {
-        box-shadow: 0 7px 28px #38bdf82b;
-        transform: translateY(-4px) scale(1.025);
-    }
-    .metrics-icon {
-        font-size: 2.3rem;
-        margin-bottom: 0.8rem;
-        display: block;
-        color: #0ea5e9;
-    }
-    .metrics-item.bg-blue .metrics-icon { color: #2563eb; }
-    .metrics-item.bg-green .metrics-icon { color: #22c55e; }
-    .metrics-item.bg-yellow .metrics-icon { color: #eab308; }
-    .metrics-label {
-        font-size: 1.09rem;
-        font-weight: 700;
-        color: #22223b;
-        margin-bottom: 0.7rem;
-    }
-    .metrics-value {
-        font-size: 2.6rem;
-        font-weight: 900;
-        color: #140e4a;
-        letter-spacing: -1px;
-        margin-bottom: 0.3rem;
-    }
-    .common-issues-title {
-        font-size: 1.16rem;
-        font-weight: 800;
-        margin: 2.2rem 0 1.2rem 0;
-        color: #2563eb;
-        display: flex;
-        align-items: center;
-        gap: 0.6rem;
-    }
-    .common-issues-title i {
-        color: #f59e42;
-        font-size: 1.3rem;
-    }
-    .issues-table {
-        width: 100%;
-        border-radius: 14px;
-        background: #fff;
-        overflow: hidden;
-        border-collapse: separate;
-        border-spacing: 0;
-        box-shadow: 0 2px 12px #140e4a0c;
-        margin-top: 0.3rem;
-        font-size: 1rem;
-    }
-    .issues-table th, .issues-table td {
-        padding: 1rem 1.1rem;
-        text-align: left;
-        vertical-align: middle;
-    }
-    .issues-table th {
-        background: linear-gradient(90deg, #bae6fd 85%, #e0f2fe 100%);
-        color: #0ea5e9;
-        font-weight: 800;
-        font-size: 1.03rem;
-        border-bottom: 2.5px solid #bae6fd;
-    }
-    .issues-table td {
-        color: #2a2936;
-        background: #fff;
-        border-bottom: 1px solid #e0f2fe;
-        transition: background 0.15s;
-    }
-    .issues-table tr:last-child td {
-        border-bottom: none;
-    }
-    .issues-table tr:hover td {
-        background: #f3f8ff;
-    }
-    .no-issues-row {
-        text-align: center;
-        color: #a7b7c7;
-        font-style: italic;
-    }
-    @media (max-width: 850px) {
-        .support-metrics-card { padding: 1rem; }
-        .support-metrics-title { font-size: 1.25rem; }
-        .metrics-item { padding: 1rem; }
-        .metrics-label { font-size: 1rem;}
-        .metrics-value { font-size: 2rem;}
-    }
-    @media (max-width: 600px) {
-        .metrics-grid { grid-template-columns: 1fr; }
-        .support-metrics-card { margin: 1.1rem 0.1rem;}
-    }
+    .products-admin-main {
+    max-width: 1000px;
+    margin: 2rem auto;
+    background: #fff;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    padding: 2rem;
+    font-family: Arial, sans-serif;
+    color: #333;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.products-admin-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #004085;
+    margin-bottom: 1.5rem;
+}
+
+.products-admin-header i.fa-cube {
+    color: #007bff;
+}
+
+.products-admin-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 1rem;
+}
+
+.products-admin-toolbar > div {
+    display: flex;
+    flex-direction: column;
+    font-size: 0.9rem;
+    min-width: 180px;
+}
+
+.products-admin-toolbar label {
+    margin-bottom: 0.3rem;
+    font-weight: 600;
+    color: #0056b3;
+}
+
+.products-admin-toolbar select,
+.products-admin-toolbar input[type="text"] {
+    padding: 0.4rem 0.6rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1rem;
+    outline: none;
+    transition: border-color 0.3s ease;
+}
+
+.products-admin-toolbar select:focus,
+.products-admin-toolbar input[type="text"]:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+.pt-toolbar-actions {
+    align-self: flex-end;
+    margin-left: auto;
+}
+
+.pt-toolbar-actions button {
+    background-color: #007bff;
+    border: none;
+    padding: 0.5rem 1rem;
+    color: white;
+    border-radius: 4px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 1rem;
+    transition: background-color 0.3s ease;
+}
+
+.pt-toolbar-actions button:hover {
+    background-color: #0056b3;
+}
+
+.products-form-errors {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+    padding: 0.75rem 1rem;
+    border-radius: 5px;
+    margin-bottom: 1rem;
+    font-size: 0.9rem;
+}
+
+.products-add-card {
+    border: 1px solid #ccc;
+    padding: 1.5rem;
+    border-radius: 6px;
+    margin-bottom: 2rem;
+    background: #f9f9f9;
+}
+
+.products-add-card h3 {
+    color: #155724;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.products-add-card h3 i {
+    color: #28a745;
+}
+
+.products-add-card form label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 0.3rem;
+    color: #004085;
+}
+
+.products-add-card form select,
+.products-add-card form input,
+.products-add-card form textarea {
+    width: 100%;
+    padding: 0.5rem 0.7rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1rem;
+    margin-bottom: 1rem;
+    box-sizing: border-box;
+    transition: border-color 0.3s ease;
+}
+
+.products-add-card form select:focus,
+.products-add-card form input:focus,
+.products-add-card form textarea:focus {
+    border-color: #28a745;
+    box-shadow: 0 0 5px rgba(40, 167, 69, 0.5);
+    outline: none;
+}
+
+.products-add-card button {
+    background-color: #28a745;
+    color: white;
+    padding: 0.6rem 1.2rem;
+    font-weight: 700;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: background-color 0.3s ease;
+}
+
+.products-add-card button:hover {
+    background-color: #1e7e34;
+}
+
+.products-table-wrap {
+    overflow-x: auto;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    box-shadow: inset 0 0 8px rgba(0,0,0,0.05);
+}
+
+.products-admin-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.95rem;
+}
+
+.products-admin-table thead {
+    background-color: #007bff;
+    color: white;
+}
+
+.products-admin-table th,
+.products-admin-table td {
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid #ddd;
+    text-align: left;
+    vertical-align: middle;
+}
+
+.products-admin-table tbody tr:hover {
+    background-color: #f1f9ff;
+}
+
+.pt-action-btn {
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    padding: 0.4rem 0.8rem;
+    border-radius: 4px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.pt-action-btn:hover {
+    background-color: #b02a37;
+}
+
 </style>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 {% endblock %}
 
 {% block content %}
-<div class="support-metrics-card">
-    <div class="support-metrics-title">
-        <i class="fa-solid fa-headset"></i>
-        Support & Communication Metrics
+<div class="products-admin-main">
+    <div class="products-admin-header">
+        <i class="fa-solid fa-cube"></i>
+        <h2>Manage Products</h2>
     </div>
-    <!-- Filter Dropdown -->
-    <form method="get" class="support-metrics-filter">
-        <label for="period">Filter:</label>
-        <select name="period" id="period" onchange="this.form.submit()">
-            <option value="today" {% if selected_period == 'today' %}selected{% endif %}>Today</option>
-            <option value="month" {% if selected_period == 'month' %}selected{% endif %}>This Month</option>
-            <option value="year" {% if selected_period == 'year' %}selected{% endif %}>This Year</option>
-        </select>
+
+    <!-- Filter & Search (GET FORM) -->
+    <form method="get" class="products-admin-toolbar">
+        <div>
+            <label>Filter by Category:</label>
+            <select name="category" onchange="this.form.submit()">
+                <option value="">All Categories</option>
+                {% for cat in categories %}
+                <option value="{{ cat.id }}" {% if cat.id|stringformat:'s' == selected_cat %}selected{% endif %}>{{ cat.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div>
+            <label>Filter by Product Category:</label>
+            <select name="product_category" onchange="this.form.submit()">
+                <option value="">All Product Categories</option>
+                {% for pc in product_categories %}
+                    {% if pc.category_id|stringformat:'s' == selected_cat %}
+                        <option value="{{ pc.id }}" {% if pc.id|stringformat:'s' == selected_pc %}selected{% endif %}>{{ pc.name }}</option>
+                    {% endif %}
+                {% endfor %}
+            </select>
+        </div>
+
+        <div>
+            <label>Filter by Product Type:</label>
+            <select name="product_type" onchange="this.form.submit()">
+                <option value="">All Product Types</option>
+                {% for pt in product_types %}
+                    {% if pt.product_category.category_id|stringformat:'s' == selected_cat and pt.product_category_id|stringformat:'s' == selected_pc %}
+                        <option value="{{ pt.id }}" {% if pt.id|stringformat:'s' == selected_type %}selected{% endif %}>{{ pt.name }}</option>
+                    {% endif %}
+                {% endfor %}
+            </select>
+        </div>
+
+        <div>
+            <label>Search Product:</label>
+            <input type="text" name="search" value="{{ search_query }}" placeholder="Enter product name" />
+        </div>
+
+        <div class="pt-toolbar-actions">
+            <button type="submit">
+                <i class="fa-solid fa-filter mr-1"></i>Apply Filters
+            </button>
+        </div>
     </form>
 
-    <div class="metrics-grid">
-        <div class="metrics-item bg-blue">
-            <span class="metrics-icon"><i class="fa-solid fa-ticket"></i></span>
-            <div class="metrics-label">Support Tickets</div>
-            <div class="metrics-value">{{ support_count }}</div>
-        </div>
-        <div class="metrics-item bg-green">
-            <span class="metrics-icon"><i class="fa-solid fa-chalkboard-user"></i></span>
-            <div class="metrics-label">Demo Requests</div>
-            <div class="metrics-value">{{ demo_count }}</div>
-        </div>
-        <div class="metrics-item bg-yellow">
-            <span class="metrics-icon"><i class="fa-solid fa-graduation-cap"></i></span>
-            <div class="metrics-label">Training Requests</div>
-            <div class="metrics-value">{{ training_count }}</div>
-        </div>
+    <!-- Error Block -->
+    {% if form.errors %}
+    <div class="products-form-errors">
+        <ul>
+            {% for field in form %}
+                {% for error in field.errors %}
+                    <li>{{ error }}</li>
+                {% endfor %}
+            {% endfor %}
+            {% for error in form.non_field_errors %}
+                <li>{{ error }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+
+    <!-- Add Product Form (POST FORM) with cascading dropdowns -->
+    <div class="products-add-card">
+        <h3>
+            <i class="fa-solid fa-plus-circle mr-1" style="color:#22c55e;"></i>
+            Add New Product
+        </h3>
+        <form method="POST" enctype="multipart/form-data" id="add-product-form" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {% csrf_token %}
+
+            <div>
+                <label for="id_category" class="block font-semibold mb-1 text-[#2563eb]">Category<span class="text-red-600 ml-1">*</span></label>
+                <select id="id_category" name="category" required class="w-full border rounded px-3 py-2">
+                    <option value="">Select Category</option>
+                    {% for cat in categories %}
+                    <option value="{{ cat.id }}">{{ cat.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div>
+                <label for="id_product_category" class="block font-semibold mb-1 text-[#2563eb]">Product Category<span class="text-red-600 ml-1">*</span></label>
+                <select id="id_product_category" name="product_category" required class="w-full border rounded px-3 py-2">
+                    <option value="">Select Product Category</option>
+                </select>
+            </div>
+
+            <div>
+                <label for="id_product_type" class="block font-semibold mb-1 text-[#2563eb]">Product Type<span class="text-red-600 ml-1">*</span></label>
+                <select id="id_product_type" name="product_type" required class="w-full border rounded px-3 py-2">
+                    <option value="">Select Product Type</option>
+                </select>
+            </div>
+
+            <!-- Render other fields from your form except product_type, color, and size -->
+            {% for field in form %}
+                {% if field.name != "product_type" and field.name != "color" and field.name != "size" %}
+                <div class="md:col-span-2">
+                    <label for="{{ field.id_for_label }}" class="block font-semibold mb-1 text-[#2563eb]">
+                        {{ field.label }}{% if field.field.required %}<span class="text-red-600 ml-1">*</span>{% endif %}
+                    </label>
+                    {{ field|add_class:"w-full border rounded px-3 py-2" }}
+                    {% if field.errors %}
+                    <ul class="text-red-600 text-xs mt-1">
+                        {% for error in field.errors %}
+                        <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
+                </div>
+                {% endif %}
+            {% endfor %}
+
+            <!-- Render color and size fields separately -->
+            <div>
+                <label for="{{ form.color.id_for_label }}" class="block font-semibold mb-1 text-[#2563eb]">
+                    {{ form.color.label }}{% if form.color.field.required %}<span class="text-red-600 ml-1">*</span>{% endif %}
+                </label>
+                {{ form.color|add_class:"w-full border rounded px-3 py-2" }}
+                {% if form.color.errors %}
+                <ul class="text-red-600 text-xs mt-1">
+                    {% for error in form.color.errors %}
+                    <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+            </div>
+
+            <div>
+                <label for="{{ form.size.id_for_label }}" class="block font-semibold mb-1 text-[#2563eb]">
+                    {{ form.size.label }}{% if form.size.field.required %}<span class="text-red-600 ml-1">*</span>{% endif %}
+                </label>
+                {{ form.size|add_class:"w-full border rounded px-3 py-2" }}
+                {% if form.size.errors %}
+                <ul class="text-red-600 text-xs mt-1">
+                    {% for error in form.size.errors %}
+                    <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+            </div>
+
+            <div class="md:col-span-2">
+                <button type="submit" style="width:170px;">
+                    <i class="fa-solid fa-circle-check mr-1"></i>
+                    Add Product
+                </button>
+            </div>
+        </form>
     </div>
 
-    <div class="common-issues-title">
-        <i class="fa-solid fa-triangle-exclamation"></i>
-        Most Common Issues Raised
-    </div>
-    <div class="overflow-x-auto">
-        <table class="issues-table">
+    <!-- Product Table -->
+    <div class="products-table-wrap">
+        <table class="products-admin-table">
             <thead>
                 <tr>
-                    <th>Issue (Request Name)</th>
-                    <th>Count</th>
+                    <th>Name</th>
+                    <th>Type</th>
+                    <th>Color</th>
+                    <th>Size</th>
+                    <th>Created At</th>
+                    <th>Action</th>
                 </tr>
             </thead>
             <tbody>
-                {% for issue in common_issues %}
+                {% for item in items %}
                 <tr>
-                    <td>{{ issue.name }}</td>
-                    <td>{{ issue.count }}</td>
+                    <td>{{ item.name }}</td>
+                    <td>{{ item.product_type.name }}</td>
+                    <td>{{ item.color }}</td>
+                    <td>{{ item.size }}</td>
+                    <td>{{ item.created_at|date:"Y-m-d H:i" }}</td>
+                    <td>
+                        <form method="POST" action="{% url 'delete_product' item.id %}" style="display:inline;" onsubmit="return confirm('Delete product {{ item.name }}?');">
+                            {% csrf_token %}
+                            <button type="submit" class="pt-action-btn">
+                                <i class="fa-solid fa-trash-can"></i>
+                                Delete
+                            </button>
+                        </form>
+                    </td>
                 </tr>
                 {% empty %}
                 <tr>
-                    <td colspan="2" class="no-issues-row py-6">No issues found for selected period.</td>
+                    <td colspan="6" class="text-center text-gray-500 py-6">No products found.</td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
     </div>
 </div>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const categorySelect = document.getElementById('id_category');
+    const productCategorySelect = document.getElementById('id_product_category');
+    const productTypeSelect = document.getElementById('id_product_type');
+
+    categorySelect.addEventListener('change', function() {
+        const categoryId = this.value;
+        productCategorySelect.innerHTML = '<option value="">Select Product Category</option>';
+        productTypeSelect.innerHTML = '<option value="">Select Product Type</option>';
+        if (!categoryId) return;
+
+        fetch("{% url 'ajax_product_categories' %}?category_id=" + categoryId)
+            .then(response => response.json())
+            .then(data => {
+                data.product_categories.forEach(function(pc) {
+                    let opt = document.createElement('option');
+                    opt.value = pc.id;
+                    opt.textContent = pc.name;
+                    productCategorySelect.appendChild(opt);
+                });
+            });
+    });
+
+    productCategorySelect.addEventListener('change', function() {
+        const productCategoryId = this.value;
+        productTypeSelect.innerHTML = '<option value="">Select Product Type</option>';
+        if (!productCategoryId) return;
+
+        fetch("{% url 'ajax_product_types' %}?product_category_id=" + productCategoryId)
+            .then(response => response.json())
+            .then(data => {
+                data.product_types.forEach(function(pt) {
+                    let opt = document.createElement('option');
+                    opt.value = pt.id;
+                    opt.textContent = pt.name;
+                    productTypeSelect.appendChild(opt);
+                });
+            });
+    });
+});
+</script>
+
 {% endblock %}
