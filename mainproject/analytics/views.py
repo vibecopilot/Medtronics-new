@@ -310,7 +310,7 @@ def support_metrics_view(request):
     elif period == 'year':
         logs = RequestLog.objects.filter(date__year=today.year)
     else: 
-        logs = RequestLog.objects.filter(date_year=today.year, date_month=today.month)
+        logs = RequestLog.objects.filter(date__year=today.year, date__month=today.month)
 
     demo_count = logs.filter(request_type__name='Demo').count()
     training_count = logs.filter(request_type__name='Training').count()
