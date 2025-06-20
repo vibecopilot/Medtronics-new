@@ -1,7 +1,8 @@
+{% extends 'base.html' %}
+
 {% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
+
+{% block content %}
     <link rel="icon" type="image/png" href="{% static 'images/favicon.png' %}">
     <title>Product Catalogue</title>
     <script src="https://cdn.tailwindcss.com"></script>
@@ -155,6 +156,4 @@
     });
     </script>
 
-
-</body>
-</html>
+{% endblock %}

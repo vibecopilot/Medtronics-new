@@ -1,6 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block content %}
     <link rel="icon" type="image/png" href="{% static 'images/favicon.png' %}">
     <title>{{ product.name }}</title>
     <meta charset="UTF-8">
@@ -284,5 +286,4 @@
         });
     });
     </script>
-</body>
-</html>
+{% endblock %}
