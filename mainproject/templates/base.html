@@ -5,10 +5,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="{% static 'images/favicon.png' %}">
     <title>Healthcare Interactive Site</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
+        {% block style %}
+        
+        {% endblock %}
         /* ... (your custom CSS unchanged, see your original for full content) ... */
         .hover-expand { transition: all 0.5s ease-in-out; }
         .hover-expand:hover { width: 100% !important; z-index: 10; }
@@ -29,14 +33,12 @@
     </style>
 </head>
 
-{% block content %}
 <body class="bg-gray-50 min-h-screen">
     <!-- HEADER -->
     <header class="bg-[#140e4a] text-white shadow-lg relative z-20">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
             <!-- LEFT: Brand -->
             <div class="flex items-center gap-4">
-                <img src="{% static 'images/favicon.png' %}" alt="Medtronic Logo" class="h-8 w-auto">
                 <a href="{% url 'home' %}" class="text-2xl font-bold tracking-tight hover:text-blue-300 transition">Medtronic</a>
             </div>
             <!-- RIGHT: Nav and Wishlist -->
@@ -57,6 +59,21 @@
             </nav>
         </div>
         <!-- DJANGO MESSAGES -->
+        
+    </header>
+    {% block content %}
+    <!-- ... (rest of your page unchanged, starting from hero section, slider, footer, etc.) ... -->
+
+    <!-- HERO SECTION -->
+    <section class="bg-white py-8 sm:py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 text-center">
+            <h2 class="text-3xl sm:text-4xl font-bold text-[#140e4a] mb-4">Advance Surgical Products Portal</h2>
+        </div>
+    </section>
+
+    <!-- MAIN CONTENT (SLIDER) -->
+    <main class="relative flex mobile-stack h-[70vh] sm:h-[70vh] overflow-hidden w-full shadow-lg">
+
         {% if messages %}
         <div class="max-w-7xl mx-auto px-4 sm:px-6 pb-2" id="django-messages">
             {% for message in messages %}
@@ -72,21 +89,6 @@
             {% endfor %}
         </div>
         {% endif %}
-    </header>
-
-    <!-- ... (rest of your page unchanged, starting from hero section, slider, footer, etc.) ... -->
-
-    <!-- HERO SECTION -->
-    <section class="bg-white py-8 sm:py-12">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 text-center">
-            <h2 class="text-3xl sm:text-4xl font-bold text-[#140e4a] mb-4">Advance Surgical Products Portal</h2>
-        </div>
-    </section>
-
-    <!-- MAIN CONTENT (SLIDER) -->
-    <main class="relative flex mobile-stack h-[70vh] sm:h-[70vh] overflow-hidden w-full shadow-lg">
-        <!-- ... all your cards as before ... -->
-        <!-- Card 1 - Products Catalogue -->
         <div class="bg-white hover-expand w-1/4 mobile-card h-full cursor-pointer group relative overflow-hidden border-r border-gray-200">
             <a href="{% url 'category_list' %}" class="block h-full">
                 <div class="w-full h-32 bg-gradient-to-br from-blue-100 to-blue-200 flex items-center justify-center">

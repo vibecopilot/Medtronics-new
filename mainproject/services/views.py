@@ -67,7 +67,7 @@ def demo_request_view(request):
     if request.user.is_authenticated and getattr(request.user, 'role', None) == 'admin':
         messages.error(request, "Admins cannot access this form.")
         return redirect('home')
-    categories = Category.objects.all()
+    categories = Category.objects.filter(is_avaliable=True)
     form = DemoForm(request.POST or None, user=getattr(request, 'user', None))
     if request.method == 'POST':
         if form.is_valid():
@@ -126,7 +126,7 @@ def training_request_view(request):
     if request.user.is_authenticated and getattr(request.user, 'role', None) == 'admin':
         messages.error(request, "Admins cannot access this form.")
         return redirect('home')
-    categories = Category.objects.all()
+    categories = Category.objects.filter(is_avaliable=True)
     form = TrainingForm(request.POST or None, user=getattr(request, 'user', None))
     if request.method == 'POST':
         if form.is_valid():
@@ -185,7 +185,7 @@ def product_request_view(request):
     if request.user.is_authenticated and getattr(request.user, 'role', None) == 'admin':
         messages.error(request, "Admins cannot access this form.")
         return redirect('home')
-    categories = Category.objects.all()
+    categories = Category.objects.filter(is_avaliable=True)
     form = ProductForm(request.POST or None, user=getattr(request, 'user', None))
     if request.method == 'POST':
         if form.is_valid():

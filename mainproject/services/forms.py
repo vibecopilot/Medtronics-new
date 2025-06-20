@@ -27,7 +27,8 @@ class AjaxProductRequestForm(forms.Form):
     name = forms.CharField(max_length=255, validators=[validate_name])
     email = forms.EmailField(validators=[validate_email])
     contact_number = forms.CharField(max_length=15, validators=[validate_contact_number])
-    category = forms.ModelChoiceField(queryset=Category.objects.all(), required=True)
+    # Remove queryset here!
+    category = forms.ModelChoiceField(queryset=Category.objects.none(), required=True)
     product_category = forms.CharField(required=False)
     product_type = forms.CharField(required=False)
     product = forms.CharField(required=True)
@@ -36,6 +37,8 @@ class AjaxProductRequestForm(forms.Form):
     def __init__(self, *args, **kwargs):
         user = kwargs.pop('user', None)
         super().__init__(*args, **kwargs)
+        # Set the queryset dynamically here!
+        self.fields['category'].queryset = Category.objects.filter(is_avaliable=True)
         if user and getattr(user, 'is_authenticated', False):
             self.fields['name'].initial = user.get_full_name() or user.username
             self.fields['email'].initial = user.email
@@ -49,6 +52,8 @@ class AjaxProductRequestForm(forms.Form):
         except Product.DoesNotExist:
             raise ValidationError("Selected Product does not exist.")
         return product
+
+
 
 
     # You can add similar clean_product_category and clean_product_type if you want to enforce validation
